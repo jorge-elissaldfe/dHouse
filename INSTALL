@@ -1,0 +1,150 @@
+dHouse
+
+Tasmota manager for Sonoff devices
+dHouse is an open-source application for managing Sonoff devices running the Tasmota firmware. 
+It is strongly inspired by the eWeLink software.
+dHouse requires a Linux server to operate. 
+It uses the MQTT protocol to communicate with Sonoff devices.
+
+Required third-party software: 
+	Avahi – for local network service discovery 
+	Mosquitto – as the MQTT broker 
+	SortableJS – for drag-and-drop UI functionality 
+	Ntfy – for push notifications
+	SQLite3 - for data logging
+
+dHouse runs through a web interface built with PHP and JavaScript. 
+
+
+-------------------------------------------------------------------------------------------------
+Installation
+-------------------------------------------------------------------------------------------------
+
+dHouse is designed to run on a Debian-based Linux server.
+Apache home for this document is /usr/local/dhouse
+Copy the whole master files to /usr/local/dhouse
+
+Apache:
+	-Install Apache, php and php-curl.
+
+	> apt install apache2 apache2-utils php php-curl
+
+	-Set Apache permissions:
+	[/etc/apache2/sites-available/000-default.conf]
+
+	DocumentRoot /usr/local/dhouse
+	<Directory /usr/local/dhouse>
+	    AllowOverride AuthConfig
+	</Directory>
+
+	-Create .htaccess file in home folder:
+	[/usr/local/dhouse/web/.htaccess]:
+
+	AuthType Basic
+	AuthName "dHouse Access"
+	AuthUserFile /etc/apache2/dhouse.passwd
+	Require valid-user	
+
+	-Create password file:
+
+	> htpasswd -c /etc/apache2/dhouse.passwd username
+	
+Avahi:
+
+	> apt install avahi avahi-utils
+
+Mosquitto:
+
+	> apt install mosquitto
+
+	-Set mosquito configuration into file /etc/mosquitto/conf.d:
+	[auth.conf]
+
+	per_listener_settings true
+	listener 1883
+	allow_anonymous true
+	protocol mqtt
+
+	-Restart mosquitto:
+
+	> systemctl restart mosquitto
+
+
+SQLite3:
+
+	> apt install sqlite3 php-sqlite3
+
+	-Run the script "create_tables.sql" from the folder db
+	-Set dhouse.db database file to owner www-data
+
+	> chown www-data:www-data dhouse.db
+
+
+ntfy:
+	-Notify is required to send notifications to cellphone.
+	-Install ntfy from github repository:
+
+	> wget https://github.com/binwiederhier/ntfy/releases/download/v2.12.0/ntfy_2.12.0_linux_amd64.deb
+	> sudo dpkg -i ntfy_2.12.0_linux_amd64.deb
+	> sudo systemctl enable ntfy
+	> sudo systemctl start ntfy
+
+	-Create user and password access for ntfy:
+
+	> ntfy user add *user* --auth-file /etc/ntfy/user.db
+	> ntfy user change-pass *user*
+
+	-Edit file /etc/ntfy/server.yml and add following lines:
+	[/etc/ntfy/server.yml]
+
+	listen-http: ":8082"
+	base-url: "http://dhouse.ddns.net:8082"
+	auth-file: "/etc/ntfy/user.db"
+	allow-unauthenticated: []
+	web-root: disable
+
+	-Install ntfy Application in your cellphone
+	-Send a test message:
+
+	> curl -u *user*:*pass* -d "Testing!" http://[your ip address]:8082/dhouse
+
+	-Set dhouse/ntfy .htaccess file:
+	[/usr/local/dhouse/ntfy/.htaccess]
+
+	Require all denied /
+
+	-Create ntfy.json file into ntfy folder
+	[/usr/local/dhouse/ntfy/ntfy.json]
+
+	{
+  	"user": "username",
+  	"password": "password",
+  	"url": "http://[your ip address]:8082/dhouse"
+	}
+	
+
+dHouse uses a proxy to accelerate connections to and from the MQTT broker.
+The proxy listens in 8080 port and uses Apache redirection for security.
+Install next modules:
+
+	> a2enmod proxy
+	> a2enmod proxy_http
+	> a2enmod proxy_wstunnel
+
+Edit the Apache virtual host and add next lines:
+
+	<virtualhost [your virtual host]>
+      ProxyPass "/ws/" "ws://localhost:8080/ws/"
+      ProxyPassReverse "/ws/" "ws://localhost:8080/ws/"
+
+      <Directory /usr/local/dhouse>
+         AllowOverride AuthConfig
+      </Directory>
+
+This works the same way for https, Apache makes connection from https to http for ws.
+
+Open your browser get connected to the dHouse page.
+Enjoy!
+
+
+
