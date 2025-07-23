@@ -143,6 +143,20 @@ Edit the Apache virtual host and add next lines:
 
 This works the same way for https, Apache makes connection from https to http for ws.
 
+
+Services:
+
+dHouse uses two services: proxy and dhouse itself.
+Copy the file dhouse.service from "services" folder to /etc/systemd/system.
+Copy the file dhouse_proxy.service from "proxy" folder to /etc/systemd/system.
+
+-Start services:
+
+> systemctl daemon-reload
+> systemctl start dhouse
+> systemctl start dhouse_proxy
+
+
 Open your browser get connected to the dHouse page.
 Enjoy!
 
