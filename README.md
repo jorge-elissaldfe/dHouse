@@ -5,7 +5,7 @@ dHouse is an open-source application for managing Sonoff devices running the Tas
 It is strongly inspired by the eWeLink software.
 
 dHouse requires a Linux server to operate.
-It uses the MQTT protocol to communicate with Sonoff devices.
+It uses the MQTT protocol to communicate to Tasmota devices.
 
 Required third-party software:
 
