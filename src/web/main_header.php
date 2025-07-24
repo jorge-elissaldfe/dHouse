@@ -24,6 +24,7 @@ function placeMainHeader($title, $placeMenu=false, $closeSection=true)
 					<hr class='menu-line'>
 					<a href="install_tasmota.php">Install Tasmota</a>
 					<a href='#' id='check_firmware_version'>Firmware update</a>
+					<a href='map_devices.php' id='map_devices'>Devices map</a>
 					<hr class='menu-line'>
 					<a href="credits.php">Credits</a>
 				</div>
