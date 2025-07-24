@@ -107,4 +107,3 @@ function place_js_iconarray() {
 	echo $js_array;
 }
 ?>
-
