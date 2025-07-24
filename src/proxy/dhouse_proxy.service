@@ -1,0 +1,17 @@
+[Unit]
+Description=dHouse Proxy
+After=network.target 
+
+[Service]
+Type=simple
+User=root
+Group=root
+ExecStart=/usr/bin/python3 /usr/local/dhouse/proxy/dhouse_proxy.py
+ExecReload=/bin/kill -s SIGUSR1 $MAINPID
+KillMode=process
+Restart=always
+RestartPreventExitStatus=255
+WorkingDirectory=/usr/local/dhouse/proxy
+
+[Install]
+WantedBy=multi-user.target
