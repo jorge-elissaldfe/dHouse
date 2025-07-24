@@ -19,3 +19,10 @@ Required third-party software:
 dHouse runs through a web interface built with PHP and JavaScript.
 
 <img width="660" height="438" alt="image" src="https://github.com/user-attachments/assets/c37cd096-3adb-4766-ab74-6b5d44e0756d" />
+
+
+Sonoff DIY is also managed by dHouse:
+
+
+
+<img width="629" height="852" alt="image" src="https://github.com/user-attachments/assets/062ebf4e-af76-4bf3-bae0-c93ccd429692" />
