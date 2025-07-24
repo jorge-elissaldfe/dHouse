@@ -1,5 +1,6 @@
 # dHouse
-Tasmota manager for Sonoff devices 
+
+[Tasmota](https://github.com/arendst/Tasmota) manager for Sonoff devices
 
 dHouse is an open-source application for managing Sonoff devices running the Tasmota firmware.
 It is strongly inspired by the eWeLink software.
@@ -35,12 +36,21 @@ Required third-party software:
 -
 -
 Credits:
-
+   
     Tasmota firmware
     Icons by FlatIcon collections
     Icons by Icons8 collections
     Sonoff DIY by Sonoff
     eWeLink App by eWeLink 
+
+[Tasmota firmware](https://github.com/arendst/Tasmota) | 
+[FlatIcon collections](https://www.flaticon.com/) | 
+[Icon8 collections](https://icons8.com/) | 
+[Sonoff](https://sonoff.tech/) | 
+[eWelink](https://ewelink.cc/)
+
+
     
+
 
 
