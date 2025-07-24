@@ -1,0 +1,47 @@
+/* dHouse
+ * Jorge Elissalde 2025
+ *
+ * power on/off checkbox 
+ */
+
+.container-onoff {
+	width: 96px;
+    cursor: pointer;
+    caret-color: transparent;
+    display: block;
+}
+
+.container-onoff input {
+	display: none;
+}
+
+.container-onoff input:checked ~ .img-checked {
+    display: inline;
+}
+
+/* If checked, hide the unchecked image */
+.container-onoff input:checked ~ .img-unchecked {
+    display: none;
+}
+
+.img-checked {
+    display: none;
+}
+
+.power-button {
+	display:flex;
+  	justify-content: center;
+    align-items: center; 
+	flex-wrap: wrap;
+	white-space: normal;
+}
+
+/* item for devices with  multiple power buttons */
+.power-item {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	text-align: center;
+	font-size: 14px; 
+}
+

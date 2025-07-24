@@ -1,0 +1,32 @@
+/* dHouse
+ * Jorge Elissalde 2025
+ */
+
+.container-device {
+    max-width: 600px;
+    margin: 1px auto;
+	margin-left: 30px;
+    padding: 10px;
+	margin-top: 1px;
+    background: #f1f1f1;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+	border: 1px dashed #cecece;
+    cursor: grab;
+	display: inline-block;
+}
+
+.container-place {
+	display: flex;
+    flex-direction: column;
+    gap: 15px; 
+    max-width: 600px;
+    margin: 10px auto;
+    padding: 10px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+
+

@@ -1,0 +1,40 @@
+.modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+      background-color: #fff;
+      margin: 10% auto;
+      padding: 20px;
+      width: 80%;
+      max-width: 800px;
+      border-radius: 10px;
+}
+
+.gallery {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
+ .gallery img {
+      width: 150px;
+      height: auto;
+      border: 2px solid transparent;
+      cursor: pointer;
+  }
+  .gallery img.selected {
+      border-color: blue;
+  }
+
+  #openModalBtn {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+  }
+  

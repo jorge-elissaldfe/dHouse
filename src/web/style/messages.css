@@ -1,0 +1,30 @@
+
+/* dHouse
+ * Jorge Elissalde 2025
+ */
+  
+.customModalOverlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+	justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.customModal {
+	position: fixed;
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    width: 350px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.3);
+    text-align: left;
+}
+
+.customModal h2 {
+    margin-top: 0;
+}
+
+

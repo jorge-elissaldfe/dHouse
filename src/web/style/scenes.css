@@ -1,0 +1,68 @@
+/* dHouse
+ * Jorge Elissalde 2025
+ */
+
+/** line with a number in a box **/
+.line-width-number {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: 10px;
+}
+
+.line {
+    flex: 1;
+    height: 1px;
+    background-color: #cecece;
+}
+
+.box-number {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #cecece;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-family: sans-serif;
+ 	color: #0056B3;
+}
+
+/** table for scene triggers and actions **/
+.table-actions {
+	border: none;
+	table-layout: fixed;
+	width: 97%;
+	margin-left: -4px;
+}
+
+.table-actions col:first-child {
+	width: 90px;
+}
+
+.table-actions td {
+	overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+	border: none;
+}
+
+.table-actions col:nth-child(3) {
+  	width: 50px;
+}
+
+.scenes-table {
+	display: table;
+    border-collapse: collapse;
+	padding: 6px;
+}
+
+.scenes-table td {
+	display: table-cell;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.empty-table {
+}
+

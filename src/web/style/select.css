@@ -1,0 +1,41 @@
+/* dHouse
+ * Jorge Elissalde 2025
+ */
+
+.select-container {
+    position: relative;
+    width: 130px;
+	margin-left: 20px;
+}
+
+.select-container::after {
+    content: "\25BC"; 
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: #cecece; 
+}
+
+select {
+	appearance: none;
+	width: 100%;
+	padding: 5px;
+	background-color: white;
+	border: 1px solid #cecece;
+	border-radius: 8px;
+	color: #333;
+	cursor: pointer;
+	outline: none;
+	height: 32px;
+}
+
+select:hover {
+    background-color: #f1f1f1;
+}
+
+select:focus {
+    border-color: #99C0D3; 
+    background-color: #fafafa; 
+}

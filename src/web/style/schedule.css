@@ -1,0 +1,128 @@
+/* 	dHouse
+ *	Jorge Elissalde 2025
+ */
+
+.wordCalendar {
+    position: relative;
+    display: inline-block;
+    font-size: 10px;
+    font-family: Verdana;
+    margin-right: 3px;
+}
+
+.wordCalendar::after {
+	content: "";
+	position: absolute;
+	top: -5px;  			/* adjust point position */
+	left: 50%;
+	width: 4px;  			/* dot size */
+	height: 4px;
+	background-color: blue;  
+	border-radius: 50%;  	/* makes dot round */
+	transform: translateX(-50%);
+}
+
+.wordCalendarNoDot {
+	position: relative;
+	display: inline-block;
+	font-size: 10px;
+	font-family: Verdana;
+	margin-right: 3px;
+}
+
+/* floating calendar popup */
+.popup {
+    position: absolute;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 15px;
+    z-index: 1000;
+    display: none;
+}
+
+/* screen dark color */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    display: none;
+    z-index: 999;
+}
+
+/* horizontal days selector */
+.circle-group {
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+}
+
+/* days circles */
+.circle {
+    position: relative;
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: normal;
+	font-family: Verdana;
+    border-radius: 50%;
+    border: 1px solid gray;
+    cursor: pointer;
+    user-select: none;
+    background: white;
+}
+
+/* hide real dot */
+.circle input {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+}
+
+ /* select effect */
+.circle input:checked + span {
+    background-color: #007bff;
+    color: white;
+    border-radius: 50%;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+ /* close button */
+.close-btn {
+    background: red;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    margin-top: 10px;
+    display: block;
+    width: 100%;
+    text-align: center;
+    border-radius: 5px;
+}
+
+#schedule-data-popup {
+    display: flex; 
+    align-items: center;
+	justify-content: center; 
+} 
+
+#calendar-popup-buttons {
+	padding-top: 15px;
+    display: flex; 
+    align-items: center;
+	justify-content: center; 
+	gap: 6px;
+}

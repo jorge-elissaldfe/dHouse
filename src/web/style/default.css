@@ -1,0 +1,455 @@
+/* dHouse
+ * Jorge Elissalde 2025
+ *
+ * Flaired edges, by Tomas Theunissen 
+ * https://css-tricks.com/examples/hrs/
+ */
+
+body {
+    /* font-family: Arial, Verdana, sans-serif;  */
+    font-family: 'Inter', sans-serif; 
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+.container {
+    max-width: 600px;
+    margin: 10px auto;
+    padding: 10px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.section {
+    margin-bottom: 10px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: #f9f9f9; 
+}
+
+.section-device {
+    margin-bottom: 5px;
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: #ffffff; /*9f9f9; */
+}
+
+.section-device-off {
+    margin-bottom: 5px;
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: #f0f0f0; /*9f9f9; */
+}
+
+.section-green {
+    margin-bottom: 10px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: #D9FDD3;
+}
+
+.section-center-noborder {
+    margin-bottom: 5px;
+    margin-top: 20px;
+    padding: 5px;
+    display: flex;
+	justify-content: center; 
+    align-items: center;    
+}
+
+h2 {
+    font-size: 20px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.section-content {
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 2px 0;
+	width: 100%;
+}
+
+.header img {
+    display: block;
+}
+
+
+.header-column {
+    display: flex;
+	flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    margin: 2px 0;
+	width: 100%;
+}
+
+
+.menu-icon {
+	width: 24px;
+	margin-left: auto; 
+	padding-right: 5px;
+	cursor: pointer;
+}
+
+.main-icon {
+	width: 48px;
+}
+
+.basic-button {
+    padding: 10px 15px;
+    font-size: 14px;
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    transition: background 0.3s ease;
+}
+
+.basic-button:disabled {
+    cursor: not-allowed;
+    background-color: #cecece !important;
+    color: black !important;
+    border: none;
+}
+
+.basic-button:hover {
+    background-color: #0056b3;
+}
+
+.small-button {
+    padding: 5px 10px;
+    font-size: 12px;
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    transition: background 0.3s ease;
+}
+
+.small-button:disabled {
+    cursor: not-allowed;
+    background-color: #cecece !important;
+    color: black !important;
+    border: none;
+}
+
+.small-button:hover {
+    background-color: #0056b3;
+}
+
+
+table {
+    border-collapse: collapse;
+}
+
+td {
+	/*padding: 4px 3px 8px;*/
+	padding: 6px; 
+    text-align: left;
+	white-space: nowrap;
+}
+
+
+.main-table {
+    border-collapse: collapse;
+}
+
+.main-table td {
+     /*	 main table icons */
+	padding: 12px 12px 0px 0px;
+	
+    text-align: left;
+	white-space: nowrap;
+}
+
+
+/** user defined timer **/
+.user-timer-table {
+	margin-top: 10px !important;
+}
+
+.user-timer-table td {
+    padding: 4px 8px 8px;
+    text-align: left;
+	white-space: nowrap;
+}
+
+.device-icon {
+    width: 24px;
+    height: 24px;
+}
+
+.nolink {
+	padding-left: 4px;
+	text-decoration: none; 
+	font-style: normal;
+	color: black;
+}
+
+.nolink:link { text-decoration: none; color: black; }
+.nolink:visited { text-decoration: none; color: black;}
+.nolink:hover { text-decoration: none; color: black;}
+.nolink:active { 
+	text-decoration: none; 
+	color: black;
+    font-style: normal;
+}
+
+.nolink[disabled] {
+    color: gray;
+    pointer-events: none;
+    cursor: default;
+    font-style: italic;
+	color: gray;
+}
+
+.settings {
+	display: flex; 
+	align-items: center;
+	justify-content: flex-start;
+	height: 25px;
+}
+
+.settings img {
+    display: block;
+    width: 22px;
+	margin-left: 16px;
+}
+
+/** class for timers in control_device.php **/
+.timers {
+	display: flex;  
+	align-items: center;
+	text-align: center;
+	justify-content: center; 
+	flex-wrap: wrap; 
+}
+
+.timers table {
+    margin: 0;
+}
+
+.timers img {
+    display: block;
+    width: 24px;
+}
+
+.schedule {
+	display: flex;  
+	align-items: center;
+	text-align: center;
+	justify-content: center; 
+	flex-wrap: wrap; 
+	flex-direction: column;
+}
+
+.schedule table {
+    margin: 0;
+}
+
+.schedule img {
+    display: block;
+    width: 24px;
+}
+
+.image-disabled {
+	filter: grayscale(100%);
+	opacity: 0.2;
+	pointer-events: none; 
+}
+
+
+.menu-line {
+	height: 1px; 
+	background-color: #cecece; 
+	border: none; 
+	margin: 5px 0;
+}
+
+/* Flaired edges, by Tomas Theunissen 
+   https://css-tricks.com/examples/hrs/
+*/
+
+hr.style-seven {
+    overflow: visible; /* For IE */
+    height: 30px;
+    border-style: solid;
+    border-color: black;
+    border-width: 1px 0 0 0;
+    border-radius: 20px;
+}
+
+hr.style-seven:before { /* Not really supposed to work, but does */
+    display: block;
+    content: "";
+    height: 30px;
+    margin-top: -31px;
+    border-style: solid;
+    border-color: black;
+    border-width: 0 0 1px 0;
+    border-radius: 20px;
+}
+
+/* Gradient transparent - color - transparent 
+   https://css-tricks.com/examples/hrs/
+*/
+
+hr.style-two {
+    border: 0;
+    height: 1px;
+    background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
+}
+
+/** timer window with remaining time to go **/
+#timer_msg {
+	padding: 10px 0px 16px; 
+	min-height: 20px;
+}
+
+.small-icon {
+    width: 20px !important;
+    height: 20px !important;
+}
+
+#power-button-image {
+	cursor: pointer;
+}
+
+:focus { 
+    outline-color: transparent; 
+    outline-style: none;
+}
+
+#power-button-image[disabled] {
+    pointer-events: none;
+    cursor: default;
+	filter: grayscale(100%);
+	opacity: 0.5;
+}
+
+.gray-over {
+	display: inline-block; 
+	background-color: transparent;
+	padding: 4px;
+	transition: background-color 0.3s ease;
+	cursor: pointer;
+}
+
+.gray-over:hover {
+	background-color: #e1e1e1;
+	border-radius: 5px; 
+}
+
+.status-circle {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-right: 6px;
+}
+
+.status-circle.on {
+  background-color: #28a745; /* verde */
+}
+.status-circle.off {
+  background-color: #dc3545; /* rojo */
+}
+
+input {
+	appearance: none;
+	padding: 5px; 
+	background-color: white;
+	border: 1px solid #cecece;
+	border-radius: 8px;
+	color: #333;
+	outline: none;
+	height: 24px;
+}
+
+/** --- menu icons inside header, R0 = topmost right **/
+
+.menuIconR0,
+.menuIconR1,
+.menuIconR2,
+.menuIconR3 {
+	width: 24px;
+	position: absolute; 
+	bottom: 5px; 
+	cursor: pointer;
+}
+
+.menuIconR0 {
+	right: 16px; 
+}
+
+.menuIconR1 {
+	right: 56px; 
+}
+
+.menuIconR2 {
+	right: 96px; 
+}
+
+.menuIconR3 {
+	right: 136px; 
+}
+
+.menuIconL0 {
+	width: 24px;
+	position: absolute; 
+	bottom: 5px; 
+	cursor: pointer;
+	left: 16px;
+}
+
+/* second section */
+.submenuIconR0 {
+	width: 24px;
+	position: absolute; 
+	/*bottom: px; */
+	cursor: pointer;
+	right: -10px;
+}
+
+.note {
+	font-size: 0.8em;
+	color: #555;
+}
+
+.shortcut {
+	background-color: #f5f5f5;
+	/*font-family: monospace;*/
+	padding: 4px 4px;
+	border-radius: 4px;
+	border: 1px solid #ddd;
+	font-size: 80%;
+	display: inline-block; 
+	margin: 4px 2px;
+	cursor: pointer;
+}
+
+.shortcut:hover {
+    background-color: #ccc; 
+}
+
+.iconPointer {
+	width: 24px;
+	cursor: pointer;
+}
+
+label { cursor:pointer; }
