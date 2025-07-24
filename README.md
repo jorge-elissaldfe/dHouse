@@ -15,13 +15,21 @@ Required third-party software:
     Ntfy – for push notifications for a cellphone    
     SQLite3 - for data logging
     
-
-dHouse runs through a web interface built with PHP and JavaScript.
+-
+- dHouse runs through a web interface built with PHP and JavaScript.
+- dHouse includes scenes to turn devices on or off based on different triggers.
+- dHouse is able to send cellphone notifications when devices are turned off, turned on, disconnected, or connected.
+- 
 
 <img width="660" height="438" alt="image" src="https://github.com/user-attachments/assets/c37cd096-3adb-4766-ab74-6b5d44e0756d" />
 
 
-Sonoff DIY is also managed by dHouse:
+
+-
+- Sonoff devices having DIY are easier to configure using Tasmota.
+- dHouse can also help to configure and manage Sonoff DIY devices.
+- 
+
 
 
 
