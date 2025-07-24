@@ -29,6 +29,9 @@
 	<link rel='stylesheet' href='style/messages.css'>
 	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
  	<title>Install Tasmota firmware</title>
+	<script>
+	<?php include("set_jsenv.php"); ?>
+	</script>
 	<script src='js/messages.js'></script>	
 	<script src='js/generic.js'></script>
 	<script src='js/tasmota.js'></script>
@@ -62,10 +65,7 @@
 		<button id='install-button' class='basic-button'> Install </button>&nbsp;&nbsp;
 		<button class='basic-button' onclick="history.go(-1)"> Close </button>
 		</center>
-
-
 <script>
-<?php include("set_jsenv.php"); ?>
 
 device_ip = '<?=$ip?>';
 device_id = '<?=$deviceid?>';
@@ -159,7 +159,7 @@ Firmware url: ${firmware_url}<br>\
 	//	
 	$("spinner").style.display = "block";
 	let url = `/php/set_ota_unlock.php?ip=${device_ip}&deviceid=${device_id}`;
-	r = await get_url_content(url);
+	let r = await get_url_content(url);
 	$("spinner").style.display = "none";
 
 	if (r != 'Done') {
@@ -206,7 +206,6 @@ function fillTasmotaReleaseSelect(){
 }
 
 function setupNavigation() {
-console.log ("bav");
 	$('install-button')?.addEventListener("click", () => installFirmware());
 	$('main-icon')?.addEventListener("click", () => go_url("index.php"));
 }
