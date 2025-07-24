@@ -118,6 +118,7 @@ class configTasmotaClass {
 		const moduleNewType = selectModule.options[selectModule.selectedIndex].text;
 		const moduleNewIndex = selectModule.value;
 		let backlog = "";
+		let saveHostname = false;
 
 		if (!config.dHouse.devices?.[device]) {
 			if (!config.dHouse.devices) {
@@ -138,6 +139,9 @@ class configTasmotaClass {
 		const friendlyNameValue = $('friendly_name').value;
 		const currentFName = config.dHouse.devices[device]?.FriendlyName;
 		if (currentFName !== friendlyNameValue) {
+			if (!await showConfirm("Changing Device Name will cause the device to restart<brDo you want to proceed?","Module modification"))
+				return;
+			saveHostname = true;
     		config.dHouse.devices[device].FriendlyName = friendlyNameValue;
     		storeServerConfiguration = true;
 		}
@@ -216,6 +220,10 @@ class configTasmotaClass {
 		if (set_template && newTemplate != this.deviceInfo['template']) {
 			backlog += "Module 0;";						// allow a new tamplate to be used
 			backlog += "Template " + newTemplate;
+		}
+
+		if (saveHostname) {
+			backlog += "Hostname " + friendlyNameValue + ";";
 		}
 
 		// modify module type
@@ -920,7 +928,7 @@ class configTasmotaClass {
 		this.mqttClient.publish('cmnd/'+device+'/Latitude', '');		
 		this.mqttClient.publish('cmnd/'+device+'/Longitude', '');	
 		this.mqttClient.publish('cmnd/'+device+'/PulseTime', '');	// get all pulse time
-		this.mqttClient.publish('cmnd/'+device+'/LedPower', '');		// get power led state
+		this.mqttClient.publish('cmnd/'+device+'/LedPower', '');	// get power led state
 		this.mqttClient.publish('cmnd/'+device+'/State', '');		// get power switches state, load average
 		this.mqttClient.publish('cmnd/'+device+'/Module', '');		// get module type: Sonoff Bridge / Sonoff Basic / etc
 		this.mqttClient.publish('cmnd/'+device+'/Modules', '');		// modules list
