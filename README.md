@@ -21,7 +21,8 @@ Required third-party software:
 - dHouse is able to send cellphone notifications when devices are turned off, turned on, disconnected, or connected.
 - 
 
-<img width="660" height="438" alt="image" src="https://github.com/user-attachments/assets/c37cd096-3adb-4766-ab74-6b5d44e0756d" />
+<img width="634" height="518" alt="image" src="https://github.com/user-attachments/assets/76acf574-d680-45dc-91ed-703f297a4ca3" />
+
 
 
 
