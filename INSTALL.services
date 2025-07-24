@@ -1,0 +1,108 @@
+dHouse requires two services to run: dhouse itself and dhouse.proxy.
+The dHouse service is responsible for running scenes, logging activity, and sending notifications.
+The dHouse Proxy service acts as an intermediary between the MQTT broker and JavaScript connections.
+
+The dHouse service is built using PHP, while the Proxy service is developed in Python 3.
+To run the proxy server, Python 3 must be installed on your Linux system.
+
+Installation
+------------
+
+Copy the file dhouse.service from "services" folder to /etc/systemd/system.
+	/dhouse.service/ file
+
+	[Unit]
+	Description=dHouse remote device control
+	After=network.target 
+
+	[Service]
+	Type=simple
+	User=www-data
+	Group=www-data
+	ExecStart=/usr/bin/php /usr/local/dhouse/service/dhouse_service.php
+	ExecReload=/bin/kill -s SIGUSR1 $MAINPID
+	KillMode=process
+	Restart=always
+	RestartPreventExitStatus=255
+	WorkingDirectory=/usr/local/dhouse/service
+
+	[Install]
+	WantedBy=multi-user.target
+
+Copy the file dhouse_proxy.service from "proxy" folder to /etc/systemd/system.
+	/dhouse_proxy.service/ file
+
+	[Unit]
+	Description=dHouse Proxy
+	After=network.target 
+
+	[Service]
+	Type=simple
+	User=root
+	Group=root
+	ExecStart=/usr/bin/python3 /usr/local/dhouse/proxy/dhouse_proxy.py
+	ExecReload=/bin/kill -s SIGUSR1 $MAINPID
+	KillMode=process
+	Restart=always
+	RestartPreventExitStatus=255
+	WorkingDirectory=/usr/local/dhouse/proxy
+
+	[Install]
+	WantedBy=multi-user.target
+
+-Start services:
+
+> systemctl daemon-reload
+> systemctl start dhouse
+> systemctl start dhouse_proxy
+
+
+Both services must be running.
+You can test them using next commands:
+
+> systemctl status dhouse
+
+You should get a similar information:
+
+● dhouse.service - dHouse remote device control
+     Loaded: loaded (/etc/systemd/system/dhouse.service; enabled; preset: enabled)
+     Active: active (running) since Tue 2025-07-22 18:29:00 -03; 1 day 13h ago
+   Main PID: 202093 (php)
+      Tasks: 1 (limit: 9354)
+     Memory: 7.4M
+        CPU: 3min 2.370s
+     CGroup: /system.slice/dhouse.service
+             └─202093 /usr/bin/php /usr/local/dhouse/service/dhouse_service.php
+
+> systemctl status dhouse_proxy
+
+● dhouse_proxy.service - dHouse Proxy
+     Loaded: loaded (/etc/systemd/system/dhouse_proxy.service; enabled; preset: enabled)
+     Active: active (running) since Wed 2025-07-23 19:25:00 -03; 12h ago
+   Main PID: 211069 (python3)
+      Tasks: 2 (limit: 9354)
+     Memory: 37.0M
+        CPU: 51.964s
+     CGroup: /system.slice/dhouse_proxy.service
+             └─211069 /usr/bin/python3 /usr/local/dhouse/proxy/dhouse_proxy.py
+
+
+The proxy server is not exposed to the Internet.
+The connection is established by Apache, which is also responsible for handling security.
+To enable this connection, you need to configure the Apache proxy and tunnel module.
+
+> a2enmod proxy
+> a2enmod proxy_http
+> a2enmod proxy_wstunnel
+
+Add next lines to your Apache configuration virtual host:
+[/etc/apache2/sites-available/000-default.conf]
+
+	<virtualhost [your virtual host]>
+
+     	ProxyPass "/ws/" "ws://localhost:8080/ws/"
+      	ProxyPassReverse "/ws/" "ws://localhost:8080/ws/"
+
+Restart Apache
+
+> systemctl restart Apache2
