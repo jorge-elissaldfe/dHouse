@@ -158,6 +158,9 @@ Copy the file dhouse_proxy.service from "proxy" folder to /etc/systemd/system.
 
 
 Open your browser get connected to the dHouse page.
+Open Settings and place site name for initial configuration.
+
+
 Enjoy!
 
 
