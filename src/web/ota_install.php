@@ -62,7 +62,7 @@
 	</div>
 		<center>
 		<br><br>
-		<button id='install-button' class='basic-button'> Install </button>&nbsp;&nbsp;
+		<button id='install-button' disabled class='basic-button'> Install </button>&nbsp;&nbsp;
 		<button class='basic-button' onclick="history.go(-1)"> Close </button>
 		</center>
 <script>
@@ -72,6 +72,7 @@ device_id = '<?=$deviceid?>';
 tasmota_releases = <?=json_encode($tasmota_releases);?>;
 
 async function getSonoffDeviceInfo () {
+
 	const url = `/php/get_sonoff_info.php?ip=${device_ip}&deviceid=${device_id}`;
 	r = await get_url_content(url);
 	let s = JSON.parse(r);
@@ -80,14 +81,18 @@ async function getSonoffDeviceInfo () {
 		return;
 
 	let html = "<table>";
+	let found = false;
 	Object.entries(s.data).forEach(([key, value]) => {
 		if (key == "deviceid" || key == "fwVersion" || key == "otaUnlock" || key == "bssid") {
+			found = true;
 			html += "<tr><td>" + key + "</td>";
 			html += "<td>" + value + "</td></tr>";
 		}
 	});
 	html += "</table>";
 	$("device_info_text").innerHTML = html;
+	if (found)
+		$("install-button").disabled = false;
 }
 
 if (lastTasmotaFirmware === "") {
