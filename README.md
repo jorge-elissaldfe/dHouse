@@ -17,3 +17,5 @@ Required third-party software:
     
 
 dHouse runs through a web interface built with PHP and JavaScript.
+
+<img width="660" height="438" alt="image" src="https://github.com/user-attachments/assets/c37cd096-3adb-4766-ab74-6b5d44e0756d" />
