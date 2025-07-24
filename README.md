@@ -24,14 +24,23 @@ Required third-party software:
 <img width="634" height="518" alt="image" src="https://github.com/user-attachments/assets/76acf574-d680-45dc-91ed-703f297a4ca3" />
 
 
-
-
 -
 - Sonoff devices having DIY are easier to configure using Tasmota.
 - dHouse can also help to configure and manage Sonoff DIY devices.
 - 
 
 
-
-
 <img width="629" height="852" alt="image" src="https://github.com/user-attachments/assets/062ebf4e-af76-4bf3-bae0-c93ccd429692" />
+
+-
+-
+Credits:
+
+    Tasmota firmware
+    Icons by FlatIcon collections
+    Icons by Icons8 collections
+    Sonoff DIY by Sonoff
+    eWeLink App by eWeLink 
+    
+
+
