@@ -1,1 +1,1 @@
-
+Copy auth.conf to /etc/mosquitto/conf.d
