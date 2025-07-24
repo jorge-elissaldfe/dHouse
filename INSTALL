@@ -21,8 +21,8 @@ Installation
 -------------------------------------------------------------------------------------------------
 
 dHouse is designed to run on a Debian-based Linux server.
-Apache home for this document is /usr/local/dhouse
-Copy the whole master files to /usr/local/dhouse
+Apache home for this document is /usr/local/dhouse/web
+Copy the whole master/src files to /usr/local/dhouse
 
 Apache:
 	-Install Apache, php and php-curl.
@@ -32,8 +32,8 @@ Apache:
 	-Set Apache permissions:
 	[/etc/apache2/sites-available/000-default.conf]
 
-	DocumentRoot /usr/local/dhouse
-	<Directory /usr/local/dhouse>
+	DocumentRoot /usr/local/dhouse/web
+	<Directory /usr/local/dhouse/web>
 	    AllowOverride AuthConfig
 	</Directory>
 
