@@ -1,4 +1,0 @@
-AuthType Basic
-AuthName "dHouse Access"
-AuthUserFile /etc/apache2/dhouse.passwd
-Require valid-user
