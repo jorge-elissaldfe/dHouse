@@ -24,6 +24,11 @@ dHouse is designed to run on a Debian-based Linux server.
 Apache home for this document is /usr/local/dhouse/web
 Copy the whole master/src files to /usr/local/dhouse
 
+Set MQTT_SERVER value in config.php file.
+[/usr/local/dhouse/web/config.php]
+
+define("MQTT_SERVER", "xxx.xxx.xxx.xxx");	// place your mqtt server address
+
 Apache:
 	-Install Apache, php and php-curl.
 
