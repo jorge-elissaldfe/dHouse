@@ -28,13 +28,9 @@ define("TASMOTA_CURRENT_RELEASE",'http://ota.tasmota.com/tasmota/release/tasmota
 // http://ota.tasmota.com/tasmota/release/tasmota-minimal.bin
 define("TASMOTA_REPOSITORY", "http://ota.tasmota.com/tasmota/release/");
 
-// firmware install, first time install 9.5, then upgrade
-// ie:
-// http://ota.tasmota.com/tasmota/release-9.5.0/tasmota-lite.bin
-// http://ota.tasmota.com/tasmota/release-9.5.0/tasmota-minimal.bin
-// http://ota.tasmota.com/tasmota/release/
-// "http://ota.tasmota.com/tasmota/release/"); // 
-define("TASMOTA_FIRST_FIRMWARE", "http://ota.tasmota.com/tasmota/release/");	// http://ota.tasmota.com/tasmota/release-9.5.0/");
+// firmware to install the very first time: 9.5
+// I've have had issues installing last tasmota release as the first firmware
+define("TASMOTA_FIRST_FIRMWARE", "http://ota.tasmota.com/tasmota/release-9.5.0/");
 
 
 // module type for SonOff Bridge

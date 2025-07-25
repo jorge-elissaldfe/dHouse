@@ -44,19 +44,16 @@
 
 		<!-- devices and actions -->
 		<section class="section" style="margin-bottom: 3px">
-        	<div id="device-list" style="margin-top: 7px">
+        	<div id="device-list" style="margin-top: 7px; overflow-x: auto">
 			</div>
 			<br>Total devices: <span id='total-devices'></span>
 		</section>
     </div>
 
-<script src='js/Sortable.min.js'></script>
 <script src="js/mqtt_tasmota.js"></script>
 <script src="js/generic.js"></script>
-<script src="js/tasmota.js"></script>
 <script src='js/messages.js'></script>
 <script src="js/dom_utils.js"></script>
-<script src="js/index_shortcuts.js"></script>
 <script src="js/map_devices.js"></script>
 <script src="js/init_page.js"></script>
 <script>

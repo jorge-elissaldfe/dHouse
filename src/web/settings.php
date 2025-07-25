@@ -52,6 +52,16 @@
 					<font size=2>&nbsp;(device cpu load)</font>
 				</td>
 			</tr>
+			<tr><td><label for='set_hostname'>Set Hostname:</label></td>
+				<td>
+					<label class='switch'>
+					<input type='checkbox' id='set_hostname'>
+					<span class='slider round'></span>
+					</label>
+					<font size=2>&nbsp;(DHCP name)</font>
+				</td>
+			</tr>
+
 <?php if (EXPERIMENTAL_SET_SLEEP_TIME) { ?>
 			<tr><td>Default Sleep Time:</td>
 				<td><select id='sleep_time'>
@@ -84,8 +94,8 @@
 			</tr>
 			</table>
 		</fieldset>
-	
-		<br>
+
+		<br><p class="note">Set hostname will set device Hostanme = Name for DHCP location</p>
 		<div class="settings" style="display: flex; justify-content: center; align-items: center; height: 52px">
 		<button id='save' class='basic-button'> Save </button>&nbsp;&nbsp;
 		<button id='close' class='basic-button'> Close </button>
