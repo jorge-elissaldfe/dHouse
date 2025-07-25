@@ -138,8 +138,9 @@ class configTasmotaClass {
 
 		const friendlyNameValue = $('friendly_name').value;
 		const currentFName = config.dHouse.devices[device]?.FriendlyName;
-		if (currentFName !== friendlyNameValue) {
-			if (!await showConfirm("Changing Device Name will cause the device to restart<brDo you want to proceed?","Module modification"))
+
+		if (config.dHouse.configuration.setHostname && currentFName !== friendlyNameValue) {
+			if (!await showConfirm("Changing Device Name (will be also set Hostname) will cause the device to restart<brDo you want to proceed?","Module modification"))
 				return;
 			saveHostname = true;
     		config.dHouse.devices[device].FriendlyName = friendlyNameValue;
@@ -225,6 +226,8 @@ class configTasmotaClass {
 		if (saveHostname) {
 			backlog += "Hostname " + friendlyNameValue + ";";
 		}
+
+		backlog += "FriendlyName " + friendlyNameValue + ";";
 
 		// modify module type
 		// this will cause a device restart
@@ -758,6 +761,8 @@ class configTasmotaClass {
 		if (typeof config === 'undefined')
 			return;
 
+		this.deviceInfo['friendly_name'] = devconf['Status']['FriendlyName'][0];
+
 		var   power_on_state = devconf['Status']['PowerOnState'];
 		const friendlyName = config?.dHouse?.devices?.[device]?.FriendlyName ?? '';
 		const moduleType  = config?.dHouse?.devices?.[device]?.ModuleType ?? '';
@@ -835,6 +840,7 @@ class configTasmotaClass {
 		const friendlyName = $("friendly_name").value;
 		const {
 			ip_address,
+			friendly_name, 
 			host_name,
 			module_type,
 			version,
@@ -847,7 +853,8 @@ class configTasmotaClass {
 		// TODO: replace new firmware by messageLineWithIcon
 		let tableRows = `
 		<tr><td>IP address:</td><td>${ip_address}</td></tr>
-		<tr><td>Device:</td><td>${host_name}</td></tr>
+		<tr><td>Friendly Name:</td><td>${friendly_name}</td></tr>
+		<tr><td>Hostname:</td><td>${host_name}</td></tr>
 		<tr><td>Module:</td><td>${module_type}</td></tr>
 		<tr><td>Version:</td>
 			<td>${version}</td>

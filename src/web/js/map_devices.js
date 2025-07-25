@@ -17,25 +17,12 @@ class mapDevicesClass {
 
 	setMqttCallbacks() {
 		const handlers = [
-
 			[mqttTasmota.STAT_MESSAGE, this.mqttParseStatMessage],
-/*
-			[mqttTasmota.TELE_MESSAGE, this.mqttParseTeleMessage],
-*/
 			[mqttTasmota.CONNECTION_SUCCESS, this.mqttConnectionSuccess]
-/*
-			[mqttTasmota.CONNECTION_ERROR, this.mqttConnectionError],
-			[mqttTasmota.CONNECTION_OFFLINE, this.mqttConnectionOffline],
-			[mqttTasmota.POWER_CHANGE, this.mqttPowerChange],
-			[mqttTasmota.DEVICE_OFFLINE, this.mqttDeviceOffline],
-			[mqttTasmota.DEVICE_ONLINE, this.mqttDeviceOnline],
-			[mqttTasmota.MULTI_POWER_CHANGE, this.mqttMultiPowerChange]
-*/
 		];
 		handlers.forEach(([topic, handler]) => {
   			this.mqttClient.callbackSubscribe(topic, handler.bind(this));
 		});
-
 	}
 
 	mqttConnectionSuccess() {
@@ -56,11 +43,10 @@ class mapDevicesClass {
 		const table = createElem("table");
 		const thead = createElem("thead");
 
-
 		tr = createElem("tr");
 		tr.appendChild(createElem("th", { text: "Device", style: { "text-align": "left" }}));
-		tr.appendChild(createElem("th", { text: "Friendly Name", style: { "text-align": "left" }}));
-		tr.appendChild(createElem("th", { text: "Hostname", style: { "text-align": "left" }}));
+		tr.appendChild(createElem("th", { text: "Name", style: { "text-align": "left"}}));
+//		tr.appendChild(createElem("th", { text: "Hostname", style: { "text-align": "left" }}));
 		tr.appendChild(createElem("th", { text: "IP Address", style: { "text-align": "left" }}));
 		table.appendChild(tr);
 		
@@ -72,9 +58,9 @@ class mapDevicesClass {
 			const d = dev.split("_");
 
 			tr.appendChild(createElem("td", { text: d[1] }));
-			tr.appendChild(createElem("td", { text: devices[dev]["FriendlyName"]}));
-			tr.appendChild(createElem("td", { id: `hostname_${dev}`, style: { "max-width": "190px", overflow: "hidden", "text-overflow": "ellipsis" } }));
-			tr.appendChild(createElem("td", { id: `ip_${dev}`, style: { "text-align": "right" } }));
+			tr.appendChild(createElem("td", { text: devices[dev]["FriendlyName"] }));
+//			tr.appendChild(createElem("td", { id: `hostname_${dev}`, style: { "max-width": "190px", overflow: "hidden", "text-overflow": "ellipsis" } }));
+			tr.appendChild(createElem("td", { id: `ip_${dev}`, style: { "text-align": "right", "font-family": "monospace", "font-size": "1rem" }}));
 			table.appendChild(tr);
   		});
 		devList.appendChild(table);
@@ -101,17 +87,21 @@ class mapDevicesClass {
     		case 'STATUS5':
 	    		this.getDevconfNetwork(dev, devconf);
     			break;
-			}
+			case 'STATUS':
+				// const id = `host_${dev}`;
+				// $(id).innerHTML = devconf['Status']['FriendlyName'][0];
+				break;
+
+		}
 	}
 
 	getDevconfNetwork(dev, devconf) {
 
 		const ipaddress = devconf['StatusNET']["IPAddress"];
-		const hostname = devconf['StatusNET']["Hostname"];
-		$(`hostname_${dev}`).innerHTML = `<a href=config_tasmota.php?device=${dev}>${hostname}</a>`;
+		// const hostname = devconf['StatusNET']["Hostname"];
+		// $(`hostname_${dev}`).innerHTML = `<a href=config_tasmota.php?device=${dev}>${hostname}</a>`;
 		$(`ip_${dev}`).innerHTML = ipaddress;
 	}
-
 
 	startMqttConnection() {	 
 	    this.mqttClient.mqttConnect();

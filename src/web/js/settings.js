@@ -31,6 +31,7 @@ class settingsClass {
 
 	async saveSettings() {
 		const showAverage = $('show_average');
+		const setHostname = $('set_hostname');
 		const sleepTime = $('sleep_time');
 		const latitude = $('latitude').value;
 		const longitude = $('longitude').value;
@@ -58,6 +59,7 @@ class settingsClass {
 
 		configuration.dhouse_name = $("dhouse_name").value;	
 		configuration.showAverage = showAverage.checked ? true:false;
+		configuration.setHostname = setHostname.checked ? true:false;
 		configuration.latitude = latitude;
 		configuration.longitude = longitude;
 		configuration.timezone = $('timezone').value;
@@ -146,15 +148,15 @@ function startPage() {
 		const { configuration } = config.dHouse;
 
 		$("dhouse_name").value = configuration?.dhouse_name ?? '';
-		// show scenes bar
-		$ ("show_scenes_bar").checked = configuration?.scenesShortcut !== false;
+		$("show_scenes_bar").checked = configuration?.scenesShortcut !== false;
 
-		// show current settings
 		const showAverage = configuration?.showAverage;
-		if (showAverage) {
-			const showAverageCheck = $('show_average');
-			showAverageCheck.checked = showAverage;
-		}
+		if (showAverage)
+			$('show_average').checked = showAverage;
+
+		const setHostname = configuration?.setHostname;
+		if (setHostname)
+			$('set_hostname').checked = setHostname;
 
 		if (configuration?.latitude)
 			$('latitude').value = configuration?.latitude;
