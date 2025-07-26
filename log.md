@@ -12,3 +12,9 @@ SQLite3:
 
 
 <img width="639" height="833" alt="image" src="https://github.com/user-attachments/assets/b229b6c1-b739-4557-970a-bd2c090226c1" />
+
+-
+- The not "today" logs will be shown with full date format:
+-
+
+<img width="646" height="834" alt="image" src="https://github.com/user-attachments/assets/ae02699c-30af-4979-897d-2a449a4aad11" />
