@@ -34,7 +34,7 @@ Look for "Install Tasmota" option under main menu.
 
 -
 - The firmware version 9.5 will be installed as the first firmware.
-- You will able to upgrade it to the lastest version later.
+- You will be able to upgrade it to the latest version later.
 -
 
 <img width="681" height="804" alt="image" src="https://github.com/user-attachments/assets/6951fc1e-6323-42c3-866a-c9ab51395994" />
