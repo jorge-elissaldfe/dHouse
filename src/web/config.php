@@ -4,8 +4,8 @@
 // Jorge Elissalde 2025
 
 // required for dhouse service
-define("MQTT_SERVER", "xxx.xxx.xxx.xxx");	// place your MQTT server address
-define("MQTT_PORT", 1883);			// place your MQTT server port
+define("MQTT_SERVER", "localhost");	// place your MQTT server address
+define("MQTT_PORT", 1883);		// place your MQTT server port
 
 // sonoff port while running in diy
 define("SONOFF_DIY_PORT", 8081);
