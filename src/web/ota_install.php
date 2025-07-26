@@ -39,7 +39,10 @@
 <body>
 	<?php include ("messages.html"); ?>
 	<div class="container">
-		<?php placeMainHeader('Install Tasmota Firmware')?>
+		<?php placeMainHeader('Install Tasmota Firmware', false, false)?>
+		<div style='height: 26px'></div>
+		<img id="back-image" src="img/back.png" class='menuIconL0 gray-over' title='Go back'> 
+	</header>
     	<section class="section" id='install-section'>
 		<fieldset>
    			<legend>Sonoff Device Information</legend>
@@ -53,7 +56,9 @@
 		<div class='div_title'><strong>Install Tasmota firmware</strong><br><br></div>
 		<div class='div_text' id='device_info_text' style='width: 100%'>
 		Tasmota version to install: <b><span id='install_version'></span></b><br>
-		<b>Important:</b> select [lite] release for Sonoff MINI<br>
+		<br>
+		<b>Important:</b> select [lite] release <b>for Sonoff MINI</b><br>
+		<br>
 		Tasmota release to install: 
 		<select id='tasmota_release' name='tasmota_release' onchange='onChangeTasmotaTelease()'></select>
 		<br><br>
@@ -156,7 +161,7 @@ async function installFirmware() {
 	$("device_install").innerHTML = `<b>Installing Tasmota</b><br><br>\
 Sonoff device: ${device_id} / ${device_ip}<br>\
 Tasmota file: ${tasmotaFilename}<br>\
-Firmware url: ${firmware_url}<br>\
+Firmware URL: ${firmware_url}<br>\
 <br>Setting otaUnlock feature:`;
 
 	//
@@ -179,6 +184,7 @@ Firmware url: ${firmware_url}<br>\
 	//
 	$("device_install").innerHTML += "<br>Installing firmware: ";
 	url = `/php/set_ota_firmware.php?ip=${device_ip}&deviceid=${device_id}&tasmota_filename=${tasmotaFilename}&firmware_url=${firmware_url}`;
+
 	$("spinner").style.display = "block";
 	r = await get_url_content(url);
 	r = r.replace(/\s+/g, "");
@@ -188,7 +194,7 @@ Firmware url: ${firmware_url}<br>\
 		return;
 	}
 	$("device_install").innerHTML += "Done. <b><br><br>Installation finished</b><br><br>Look for an AP wifi connection named <b>tasmota_nnnnnn</b> that your Sonoff device will start. Connect to this wifi and open the page at: http://192.168.4.1<br>\
-Once connected configure your wifi network and the address of the <b>mqqt</b> server<br>";
+Once connected, configure your wifi network and the address of the <b>MQTT</b> server<br>You may use <a href='map_devices.php'>Devices Map</a> to configure MQTT server";
 }
 
 function onChangeTasmotaTelease() {
@@ -211,6 +217,12 @@ function fillTasmotaReleaseSelect(){
 }
 
 function setupNavigation() {
+
+	if ($("back-image")) {
+		const backPageHandler = () => window.history.back();
+		$('back-image')?.addEventListener("click", backPageHandler);
+	}
+		
 	$('install-button')?.addEventListener("click", () => installFirmware());
 	$('main-icon')?.addEventListener("click", () => go_url("index.php"));
 }

@@ -37,7 +37,7 @@
         <section id='buttons-section' class="section">
 			<h2>Notifications</h2><br>
 			<table cellpadding=0 cellspacing=0>
-			<tr><td><label for="online_text">Online:</label></td>
+			<tr><td><label for="online_text">AC Connected:</label></td>
 			<tr>
 				<td><input id="online_text" size="22" maxlength='50' type='text'></td>
 				<td><label class='switch'>
@@ -47,7 +47,7 @@
 				</td>
 			</tr>
 			
-			<tr><td><label for="offline_text">Offline:</label></td>
+			<tr><td><label for="offline_text">AC Disconnected:</label></td>
 			<tr>
 				<td><input id="offline_text" size="22" maxlength='50' type='text'></td>
 				<td><label class='switch'>
@@ -56,8 +56,8 @@
 					</label>
 				</td>
 			</tr>
-
-			<tr><td><label for='power_on'>Power On:</label></td>
+			<tr><td colspan=2 height="12px"></td></tr>
+			<tr><td><label for='power_on'>Switch Power On:</label></td>
 			<tr>
 				<td><input id="power_on" size="22" maxlength='50' type='text'></td>
 				<td><label class='switch'>
@@ -66,8 +66,7 @@
 					</label>
 				</td>
 			</tr>
-
-			<tr><td><label for='power_off'>Power Off:</label></td>
+			<tr><td><label for='power_off'>Switch Power Off:</label></td>
 			<tr>
 				<td><input id="power_off" size="22" maxlength='50' type='text'></td>
 				<td><label class='switch'>

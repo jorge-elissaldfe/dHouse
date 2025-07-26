@@ -4,7 +4,7 @@
 // Jorge Elissalde 2025
 
 // required for dhouse service
-define("MQTT_SERVER", "localhost");
+define("MQTT_SERVER", "172.20.0.170");
 define("MQTT_PORT", 1883);
 
 // sonoff port while running in diy
@@ -30,8 +30,7 @@ define("TASMOTA_REPOSITORY", "http://ota.tasmota.com/tasmota/release/");
 
 // firmware to install the very first time: 9.5
 // I've have had issues installing last tasmota release as the first firmware
-define("TASMOTA_FIRST_FIRMWARE", "http://ota.tasmota.com/tasmota/release-9.5.0/");
-
+define("TASMOTA_FIRST_FIRMWARE", "http://ota.tasmota.com/tasmota/release-9.5.0/");	
 
 // module type for SonOff Bridge
 // defined at Tasmota configuration 

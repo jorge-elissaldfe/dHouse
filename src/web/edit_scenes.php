@@ -106,7 +106,7 @@
 					</table>
 
 					<br>
-					<input id='button-add-action' class='small-button' type='button' value='Add Action''>
+					<input id='button-add-action' class='small-button' type='button' value='Add Action'>
 				</fieldset>
 
 				<div id='scene-condition'></div>

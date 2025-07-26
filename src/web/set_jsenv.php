@@ -16,4 +16,8 @@ const set_sleep_time = <?=json_encode(EXPERIMENTAL_SET_SLEEP_TIME); ?>;
 const set_template = <?=json_encode(EXPERIMENTAL_SET_TEMPLATE); ?>;
 const set_button_hold = <?=json_encode(EXPERIMENTAL_BUTTON_HOLD); ?>;
 const CMD_RELOAD = <?=json_encode(CMD_RELOAD);?>;
+const backPageHandler = () => window.history.back();
 
+
+if ($("back-image"))
+	$('back-image')?.addEventListener("click", backPageHandler);
