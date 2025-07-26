@@ -22,7 +22,7 @@ dHouse can detect a device running in Sonoff DIY mode using mDNS search or netwo
 
 - For mDNS search to work you need to install Avahi server and utils.
   
-Look for "Install Tasmota Firmware" option under main menu.
+Look for "Install Tasmota" option under main menu.
 
 <img width="699" height="427" alt="image" src="https://github.com/user-attachments/assets/9953600b-b517-4a42-9e3c-20964596ae92" />
 
