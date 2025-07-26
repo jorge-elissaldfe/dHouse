@@ -136,7 +136,7 @@ ntfy:
 	}
 
 	
-	
+Apache proxy configuration	
 
 dHouse uses a proxy to accelerate connections to and from the MQTT broker.
 The proxy listens in 8080 port and uses Apache redirection for security.
