@@ -23,30 +23,40 @@ Look for "Install Tasmota Firmware" option under main menu.
 
 <img width="699" height="427" alt="image" src="https://github.com/user-attachments/assets/9953600b-b517-4a42-9e3c-20964596ae92" />
 
-You can install Tasmota firmware when the device is detected.
+-
+- You can install Tasmota firmware when the device is detected.
+-
 
 <img width="680" height="677" alt="image" src="https://github.com/user-attachments/assets/61d222e9-f9e2-44a1-903b-8f8c21ecc5fc" />
 
-The firmware version 9.5 will be installed as the first firmware.
-You will able to upgrade it to the last version later.
+-
+- The firmware version 9.5 will be installed as the first firmware.
+- You will able to upgrade it to the last version later.
+  
 
 <img width="681" height="804" alt="image" src="https://github.com/user-attachments/assets/6951fc1e-6323-42c3-866a-c9ab51395994" />
 
-After install Tasmota firmware and Wifi settings, you can automatically set MQTT server using dHouse menu option: Devices map and Network search feature.
+-
+- After install Tasmota firmware and Wifi settings, you can automatically set MQTT server using dHouse menu option: Devices map and Network search feature.
+- 
 
 <img width="684" height="876" alt="image" src="https://github.com/user-attachments/assets/8d720be7-9576-41e8-ad0b-b224d79b82bb" />
 
-After configuring MQTT server, you will see the new device listed on main dHouse scren:
+-
+- After configuring MQTT server, you will see the new device listed on main dHouse scren:
+-
 
 <img width="707" height="520" alt="image" src="https://github.com/user-attachments/assets/3f26642d-8ac6-4af5-88bc-f3724a63e382" />
 
-After configuring the device, you will see the new version available notice:
+-
+- After configuring the device, you will see the new version available notice:
+-
 
 <img width="686" height="322" alt="image" src="https://github.com/user-attachments/assets/2b2e6f01-fe48-418e-8582-b472c5b87692" />
 
-
-The last Tasmota available firmware will be installed.
-
+-
+- The last Tasmota available firmware will be installed.
+-
 
 <img width="648" height="424" alt="image" src="https://github.com/user-attachments/assets/451e709b-e551-40fb-acea-b12dadf1d9f3" />
 
