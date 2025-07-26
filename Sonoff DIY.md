@@ -44,3 +44,5 @@ After configuring the device, you will see the new version available notice:
 
 <img width="686" height="322" alt="image" src="https://github.com/user-attachments/assets/2b2e6f01-fe48-418e-8582-b472c5b87692" />
 
+<img width="648" height="424" alt="image" src="https://github.com/user-attachments/assets/451e709b-e551-40fb-acea-b12dadf1d9f3" />
+
