@@ -13,5 +13,7 @@ dHouse allows a Sonoff DIY device to be detected and updated with Tasmota firmwa
 
 Excerpt from: [Sonoff DIY-Tasmota](https://tasmota.github.io/docs/Sonoff-DIY/#compatible-devices)
 
+[![Texto alternativo](https://url-de-la-imagen)](https://url-del-enlace)
+
 Important:
 Some devices requires a template to correctly enable buttons and functions.  Check Tasmota Templates
