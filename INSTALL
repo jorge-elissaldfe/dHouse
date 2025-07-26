@@ -87,6 +87,12 @@ SQLite3:
 
 ntfy:
 	-Notify is required to send notifications to cellphone.
+
+	* IMPORTANT *
+
+	The Ntfy service will be exposed to the Internet on port 8082.
+	Make sure to set a strong, non-trivial username and password for this server.
+
 	-Install ntfy from github repository:
 
 	> wget https://github.com/binwiederhier/ntfy/releases/download/v2.12.0/ntfy_2.12.0_linux_amd64.deb
@@ -96,8 +102,8 @@ ntfy:
 
 	-Create user and password access for ntfy:
 
-	> ntfy user add *user* --auth-file /etc/ntfy/user.db
-	> ntfy user change-pass *user*
+	> ntfy user add [username] --auth-file /etc/ntfy/user.db
+	> ntfy user change-pass [username]
 
 	-Edit file /etc/ntfy/server.yml and add following lines:
 	[/etc/ntfy/server.yml]
@@ -111,7 +117,7 @@ ntfy:
 	-Install ntfy Application in your cellphone
 	-Send a test message:
 
-	> curl -u *user*:*pass* -d "Testing!" http://[your ip address]:8082/dhouse
+	> curl -u [username]:[password] -d "Testing!" http://[your ip address]:8082/dhouse
 
 	-Set dhouse/ntfy .htaccess file:
 	[/usr/local/dhouse/ntfy/.htaccess]
