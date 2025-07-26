@@ -37,14 +37,14 @@ Look for "Install Tasmota Firmware" option under main menu.
 <img width="681" height="804" alt="image" src="https://github.com/user-attachments/assets/6951fc1e-6323-42c3-866a-c9ab51395994" />
 
 -
-- After install Tasmota firmware and Wifi settings, you can automatically set MQTT server.
+- After install Tasmota firmware and set your Wifi network configuration, you can automatically set MQTT server.
 - Use dHouse menu option: "Devices map" and then "Network search" feature.
 - 
 
 <img width="684" height="876" alt="image" src="https://github.com/user-attachments/assets/8d720be7-9576-41e8-ad0b-b224d79b82bb" />
 
 -
-- After configuring MQTT server, you will see the new device listed on main dHouse scren:
+- After configuring MQTT server, you will see the new device listed on main dHouse screen:
 -
 
 <img width="707" height="520" alt="image" src="https://github.com/user-attachments/assets/3f26642d-8ac6-4af5-88bc-f3724a63e382" />
