@@ -125,6 +125,8 @@ ntfy:
 	Require all denied /
 
 	-Create ntfy.json file into ntfy folder
+	This is the file that dhouse_service will read for send notifications.
+
 	[/usr/local/dhouse/ntfy/ntfy.json]
 
 	{
@@ -132,6 +134,8 @@ ntfy:
   	"password": "password",
   	"url": "http://[your ip address]:8082/dhouse"
 	}
+
+	
 	
 
 dHouse uses a proxy to accelerate connections to and from the MQTT broker.
