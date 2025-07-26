@@ -157,7 +157,7 @@ table {
     border-collapse: collapse;
 }
 
-td {
+td, th {
 	/*padding: 4px 3px 8px;*/
 	padding: 6px; 
     text-align: left;
@@ -453,3 +453,13 @@ input {
 }
 
 label { cursor:pointer; }
+
+
+a,
+a:visited,
+a:hover,
+a:active,
+a:focus {
+  text-decoration: none;
+  color: #2F6BAF;
+}
