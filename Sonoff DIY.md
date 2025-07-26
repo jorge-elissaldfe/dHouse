@@ -6,7 +6,7 @@ DIY mode from Sonoff
 
 - Long press the button for 5 seconds to enter pairing mode, then press another 5 seconds to enter Compatible Pairing Mode (AP). The LED indicator should blink continuously.
 - From mobile phone or PC WiFi setting, an Access Point of the device named ITEAD-XXXXXXXX will be found, connect it with default password 12345678
-- Open the browser and access http://10.10.7.1/
+- Open the browser and access to the ip address 10.10.7.1
 - Fill WiFi SSID and password. Once successfully connected, the device is in DIY mode.
 - When the device restarts you will be able to find it using Range Search or mDNS Search
 - Install Tasmota software and then look for a Wifi Access Point named: tasmota_xxxxx. Connect to this network and access to the IP Address: 192.168.4.1 for Wifi and mqtt server configuration
