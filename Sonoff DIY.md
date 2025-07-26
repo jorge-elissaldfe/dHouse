@@ -32,12 +32,13 @@ Look for "Install Tasmota Firmware" option under main menu.
 -
 - The firmware version 9.5 will be installed as the first firmware.
 - You will able to upgrade it to the last version later.
-  
+-
 
 <img width="681" height="804" alt="image" src="https://github.com/user-attachments/assets/6951fc1e-6323-42c3-866a-c9ab51395994" />
 
 -
-- After install Tasmota firmware and Wifi settings, you can automatically set MQTT server using dHouse menu option: Devices map and Network search feature.
+- After install Tasmota firmware and Wifi settings, you can automatically set MQTT server.
+- Use dHouse menu option: "Devices map" and then "Network search" feature.
 - 
 
 <img width="684" height="876" alt="image" src="https://github.com/user-attachments/assets/8d720be7-9576-41e8-ad0b-b224d79b82bb" />
