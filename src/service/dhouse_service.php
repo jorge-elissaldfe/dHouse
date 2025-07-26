@@ -12,6 +12,7 @@
 	define ("CONFIG_FOLDER", "../web/config/");
 	define ("NTFY_FOLDER", "../ntfy/");
 	define ("DATABASE_FOLDER", "../db/");
+	define ("DEFERRED_STATUS_TIME", 15);	# debounce seconds that must elapse before trigger online/offline notification
 
 	include ("../web/config.php");
 	include ("phpMQTT.php");
@@ -51,7 +52,7 @@
 	$cellphoneNotify = [];		// notifications to send when device start, stop, on, off...
 
 
-	$deviceAlive = [];			// is device alive? required for send notifications
+	$deviceAlive = [];			// is device alive? required for online/offline notifications
 
 	$timerScenes = [];			// scenes requiring a day timer to start
 	
@@ -73,7 +74,7 @@
 	connectMQTT();
 	requestDevicesStatus();		// request status for each device
 	setEventTimer();			// required for scenes using time
-	logLoop();
+	mqttLoop();
 
 	function getConfig() {
 		global $config;
@@ -222,13 +223,18 @@
 		}
 	}
 
-	function logLoop() {
+	function mqttLoop() {
 		global $mqtt;
 
 		$topics['#'] = array('qos' => 0, 'function' => 'procMsg');
 		$mqtt->subscribe($topics, 0);
+		$notificationCounter = 0;
 		while($mqtt->proc()) {
 			usleep(1000);
+			if (++$notificationCounter > 10) {
+				$notificationCounter = 0;
+				checkStatusNotifications();
+			}
 		}
 		$mqtt->close();
 	}
@@ -247,20 +253,18 @@
 		$device = $parts[1];
 
 		if (str_starts_with($topic, "tele")) {
+			// echo "tele: $topic - $msg\n";
 			processTeleMessage($topic, $msg);
 		}
-
 		if (str_starts_with($topic, "dhouse")) {
 			// dhouse internal message sent from web interfase
 			getDHouseCommand($topic, $msg);
 			return;
 		}
-
 		if (str_ends_with($topic, "LOGGING")) {
 			logPower($device,$topic, $msg);
 			return;
 		}
-
 		if (str_ends_with($topic, "RESULT")) {
 			getFirmwareUpdateData($device,$topic, $msg);
 			getPowerState($device,$topic, $msg);
@@ -275,10 +279,12 @@
 
 	function processTeleMessage($topic, $msg) {
 		$parts = explode('/', $topic);
-		if ($parts[2] == 'LWT' && ($msg == "Online" || $msg == "Offline"))
+		if ($parts[2] == 'LWT' && ($msg == "Online" || $msg == "Offline")) {
 			setDeviceAlive($parts[1], $msg);
+		}
 	}
 
+	// store status, new status and time to anti debounce online/offline messahes
 	function setDeviceAlive($device, $msg) {
 		global $deviceAlive;
 		global $cellphoneNotify;
@@ -291,28 +297,67 @@
 
 			avoid to send cellphone message when application starts
 			all devices will send this status (Online/Offline)
-			if deviceAlive[device] does not exists the application is starting
+			if deviceAlive[device] does not exists, means that the application is starting
 		**/
-		
-		if (!isset($deviceAlive[$device])) {
-			$deviceAlive[$device] = $msg;
+	
+		if (!isset($cellphoneNotify[$device][$msg]["enable"]) || $cellphoneNotify[$device][$msg]["enable"] == "no") {
+			// online/offline notification not set for this device
 			return;
 		}
 
-		$deviceAlive[$device] = $msg;
+		$currentStatus = $msg;
 
-		// notify cellphone if required
-		if (!isset($cellphoneNotify[$device][$msg]["enable"]) || 
-				   $cellphoneNotify[$device][$msg]["enable"] == "no")
+		if (!isset($deviceAlive[$device])) {
+			// first time seen this device, set status
+			$deviceAlive[$device] = [];
+			$deviceAlive[$device]['status'] = $currentStatus;
+			$deviceAlive[$device]['new_status'] = "";
+			$deviceAlive[$device]['time'] = microtime(true);
 			return;
-		$userMessage = $cellphoneNotify[$device][$msg]["message"];
-		$friendlyName = $config['dHouse']['devices'][$device]['FriendlyName'] ?? $device;
-		$notify = "$friendlyName $msg\n";		
-		if (!empty($userMessage))
-			$notify .= "\n$userMessage";
+		}
 
-		$notifyPhone->sendCellphoneNotify($notify, ($msg == "Offline") ? "no_entry":"heavy_check_mark");
+ 		$now = microtime(true);
+		$lastseen = $now - $deviceAlive[$device]['time'];
+
+		if ($deviceAlive[$device]['status'] == $currentStatus && $lastseen < DEFERRED_STATUS_TIME) {
+			$deviceAlive[$device]['new_status'] = "";
+			$deviceAlive[$device]['time'] = $now;
+			return;
+		}
+		$deviceAlive[$device]['time'] = $now;
+		$deviceAlive[$device]['new_status'] = $currentStatus;
 	}
+
+
+	// check online/offline status change and send notifications
+	// when time > DEFERRED_STATUS_TIME to avoid bouncing status
+	function checkStatusNotifications() {
+		global $deviceAlive;
+		global $cellphoneNotify;
+		global $config;
+		global $notifyPhone;
+
+		$now = microtime(true);
+		foreach ($deviceAlive as $device => $data) {
+			$elapsed = $now - $data['time'];
+			if ($elapsed > DEFERRED_STATUS_TIME) {
+				if ($data['new_status'] != "" &&  $data['new_status'] !== $data['status']) {
+					$deviceAlive[$device]['status'] = $data['new_status'];
+					$deviceAlive[$device]['new_status'] = "";
+
+					// send notification for this device
+					$status = $deviceAlive[$device]['status'];
+					$userMessage = $cellphoneNotify[$device][$status]["message"];
+					$friendlyName = $config['dHouse']['devices'][$device]['FriendlyName'] ?? $device;
+					$notify = "$friendlyName $status\n";
+					if (!empty($userMessage))
+						$notify .= "\n$userMessage";
+					$notifyPhone->sendCellphoneNotify($notify, ($status == "Offline") ? "no_entry":"heavy_check_mark");
+				}
+			}
+		}
+	}
+
 
 	// catches anything related to firmware update
 	// stat/tasmota_608461/RESULT = {"Upgrade":"Version 15.0.1 from http://ota.tasmota.com/tasmota/release/tasmota.bin.gz"}
@@ -401,7 +446,6 @@
 		}
 
 		if (str_ends_with($topic, CMD_TEST_MESSAGE)) {
-			echo "--- sending test message\n";
 			$notifyPhone->sendCellphoneTestMessage($msg);
 			return;
 		}
