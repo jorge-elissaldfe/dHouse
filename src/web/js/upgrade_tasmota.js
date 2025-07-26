@@ -164,14 +164,12 @@ function startPage() {
 }
 
 function setupNavigation() {
-	$('back-image')?.addEventListener("click", () => history.go(-1));
 	$('button-close')?.addEventListener("click", () => history.go(-1));
 }
 
 document.addEventListener("DOMContentLoaded", function() {
 	upgradeTasmota = new upgradeTasmotaClass();
 
-	// upgrade button
 	const powerButton = $("upgrade-button");
 	powerButton.addEventListener("click", function (event) {
 		upgradeTasmota.upgradeDevice();

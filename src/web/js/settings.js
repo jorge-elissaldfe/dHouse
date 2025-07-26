@@ -132,7 +132,6 @@ class settingsClass {
 	}
 
 	setupNavigation() {
-		$('back-image')?.addEventListener("click", () => go_url("index.php"));
 		$('save')?.addEventListener("click", () => this.saveSettings());
 		$('close')?.addEventListener("click", () => go_url("index.php"));
 	}

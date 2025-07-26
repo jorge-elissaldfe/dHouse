@@ -896,7 +896,7 @@ class editScenesClass {
 		document.querySelector("#add_scene_section").scrollIntoView({ behavior: "smooth" });	
 
 		// remap back button
-		$('back-image')?.removeEventListener("click", goBackIndex);
+		$('back-image')?.removeEventListener("click", this.goBackIndex);
 		$('back-image')?.addEventListener("click", () => this.cancelAddScene());
 	}
 
@@ -963,7 +963,8 @@ class editScenesClass {
 				this.appendActionOnScreen(i, false);
 		}
 		// remap back button
-		$('back-image')?.removeEventListener("click", goBackIndex);
+console.log ("remaped");
+		$('back-image')?.removeEventListener("click", this.goBackIndex);
 		$('back-image')?.addEventListener("click", () => this.cancelAddScene());
 	}
 
@@ -981,11 +982,15 @@ class editScenesClass {
 	}
 
 	goBackIndex() {
-		go_url("index.php");
+		window.history.back();
 	}
 
 	setupNavigation() {
-		$('back-image')?.addEventListener("click", this.goBackIndex);
+
+		// override main go back to be able to change it here
+		$('back-image')?.removeEventListener("click", backPageHandler);
+		$('back-image')?.addEventListener("click", this.goBackIndex);	
+
  		$('add-scene')?.addEventListener("click", () => this.addScene());
  		$('close-add-scene')?.addEventListener("click", () => this.cancelAddScene());
 		$('save-button')?.addEventListener("click", () => this.saveScene());

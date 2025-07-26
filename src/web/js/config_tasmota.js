@@ -136,6 +136,7 @@ class configTasmotaClass {
 			if (!await showConfirm("Module type change will cause the device to restart<br>Do you want to proceed?","Module modification"))
 				return;
 
+		// name and friendlyname
 		const friendlyNameValue = $('friendly_name').value;
 		const currentFName = config.dHouse.devices[device]?.FriendlyName;
 
@@ -143,6 +144,8 @@ class configTasmotaClass {
 			if (!await showConfirm("Changing Device Name (will be also set Hostname) will cause the device to restart<brDo you want to proceed?","Module modification"))
 				return;
 			saveHostname = true;
+		}
+		if (currentFName !== friendlyNameValue) {
     		config.dHouse.devices[device].FriendlyName = friendlyNameValue;
     		storeServerConfiguration = true;
 		}
@@ -242,6 +245,7 @@ class configTasmotaClass {
 			// will update load new name for this device if changed
 			reload_dHouseService(this.mqttClient);
 		}
+
 		$("main_title").innerHTML = friendlyNameValue;
 		showMessage("Configuration saved");
 	}
@@ -954,7 +958,6 @@ class configTasmotaClass {
 	}
 
 	setupNavigation() {
-		$('back-image')?.addEventListener("click", () => this.onButtonClose());
 		$('apply_default')?.addEventListener("click", () => this.applyDefaultTimezone());
 		$('save_button')?.addEventListener("click", () => this.saveDevice());
 		$('close_button')?.addEventListener("click", () => this.onButtonClose());

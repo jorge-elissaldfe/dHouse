@@ -227,7 +227,6 @@ function startPage() {
 }
 
 function setupNavigation() {
-	$('back-image')?.addEventListener("click", () => go_url("index.php"));
 	$('img-help')?.addEventListener("click", () => installTasmota.helpInstallTasmota());
 	$('search-mdns')?.addEventListener("click", () => installTasmota.performSearchMDNS());
 	$('search-iprange')?.addEventListener("click", () => installTasmota.performSearchIPRange());

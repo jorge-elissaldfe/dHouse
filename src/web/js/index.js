@@ -488,10 +488,12 @@ class indexClass {
 	}
 
 	mqttDeviceOffline(dev) {
+		console.log ("device offline: " + dev);
 		this.onDeviceOnline(dev, false);
 	}
 
 	mqttDeviceOnline(dev) {
+		console.log ("device online: " + dev);
 		this.onDeviceOnline(dev, true);
 	}
 

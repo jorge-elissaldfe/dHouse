@@ -104,7 +104,6 @@ class notifyClass {
 	}
 
 	setupNavigation() {
-		$('back-image')?.addEventListener("click", () => this.onButtonClose());
 		$('test-image')?.addEventListener("click", () => this.sendTestMessage());
 		$('save-button')?.addEventListener("click", () => this.saveDevice());
 		$('close-button')?.addEventListener("click", () => this.onButtonClose());

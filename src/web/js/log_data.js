@@ -270,7 +270,6 @@ class logDataClass {
 	}
 
 	setupNavigation() {
-		$('back-image')?.addEventListener("click", () => history.go(-1));
 		$('remove_log')?.addEventListener("click", () => this.deleteDeviceLog());
 		$('refresh_log')?.addEventListener("click", () => this.refreshLog());	
 		$('prev-button')?.addEventListener("click", () => this.previousPage());

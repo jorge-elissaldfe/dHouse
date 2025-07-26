@@ -577,7 +577,6 @@ function startPage() {
 }
 
 function setupNavigation() {
-	$('back-image')?.addEventListener("click", () => go_url("index.php"));
 	$('settings-image')?.addEventListener("click", () => go_url(`config_tasmota.php?device=${device}`));
 	$('log-image')?.addEventListener("click", () => go_url(`log_data.php?device=${device}`));
 	$('notify-image')?.addEventListener("click", () => go_url(`edit_notify.php?device=${device}`));

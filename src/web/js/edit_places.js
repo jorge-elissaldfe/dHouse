@@ -163,7 +163,6 @@ class editPlacesClass {
 	}
 
 	setupNavigation() {
-		$('back-image')?.addEventListener("click", () => go_url("index.php"));
 		overlay = $("overlay");
 		// Add Place popup | accept button
 		const buttonAccept = $("button-accept");

@@ -273,7 +273,6 @@ class configBridgeClass {
 	}
 
 	setupNavigation() {
-		$('back-image')?.addEventListener("click", () => go_url(`index.php`));
 		$("settings-image")?.addEventListener("click", () => go_url(`config_tasmota.php?device=${device}`));
 		$("save-button")?.addEventListener("click", () => this.saveRFButton());
 		$("cancel-button")?.addEventListener("click", () => this.cancelAddRFButton());

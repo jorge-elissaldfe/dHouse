@@ -13,6 +13,7 @@ class mapDevicesClass {
 	constructor() {
 		this.mqttClient = new mqttTasmota();
 		this.setMqttCallbacks();
+		this.ignoreMQTT = false;
 	}
 
 	setMqttCallbacks() {
@@ -33,41 +34,52 @@ class mapDevicesClass {
 		});
 	}
 
-	map_devices() {
+	createTable(nameText, addImgTD = false) {
+		const devList = $("device-list");
+		const table = createElem("table", { id: 'table_devices' });
+		const thead = createElem("thead");
+		let tr;
+
+		tr = createElem("tr");
+		if (addImgTD)
+			tr.appendChild(createElem("th"));
+		tr.appendChild(createElem("th", { text: "Device", style: { "text-align": "left" }}));
+		tr.appendChild(createElem("th", { text: nameText, style: { "text-align": "left"}}));
+		tr.appendChild(createElem("th", { text: "IP Address", style: { "text-align": "left" }}));
+		table.appendChild(tr);
+		devList.appendChild(table);
+	}
+
+	mapDevices() {
 		if (!devices)
 			return ;
 
 		let tr, th;
 
-		const devList = $("device-list");
-		const table = createElem("table");
-		const thead = createElem("thead");
-
-		tr = createElem("tr");
-		tr.appendChild(createElem("th", { text: "Device", style: { "text-align": "left" }}));
-		tr.appendChild(createElem("th", { text: "Name", style: { "text-align": "left"}}));
-//		tr.appendChild(createElem("th", { text: "Hostname", style: { "text-align": "left" }}));
-		tr.appendChild(createElem("th", { text: "IP Address", style: { "text-align": "left" }}));
-		table.appendChild(tr);
-		
+		this.createTable('Name');
 		const arrayDevs = Object.keys(devices);
 	
 		// show devices
+		const table = $('table_devices');
 		arrayDevs.forEach(dev => {
 			tr = createElem("tr");
 			const d = dev.split("_");
-
 			tr.appendChild(createElem("td", { text: d[1] }));
-			tr.appendChild(createElem("td", { text: devices[dev]["FriendlyName"] }));
-//			tr.appendChild(createElem("td", { id: `hostname_${dev}`, style: { "max-width": "190px", overflow: "hidden", "text-overflow": "ellipsis" } }));
+
+			const lnk = createElem("a", { text: devices[dev]["FriendlyName"], href: `config_tasmota.php?device=${dev}` })
+			//tr.appendChild(createElem("td", { text: devices[dev]["FriendlyName"] }));
+			const td = createElem("td");
+			td.appendChild(lnk);
+			tr.appendChild(td);
 			tr.appendChild(createElem("td", { id: `ip_${dev}`, style: { "text-align": "right", "font-family": "monospace", "font-size": "1rem" }}));
 			table.appendChild(tr);
   		});
-		devList.appendChild(table);
-		$("total-devices").innerHTML = arrayDevs.length;
+		$("total-devices").innerHTML = 'Total devices: ' + arrayDevs.length;
 	}
 
 	mqttParseStatMessage(topic, message, dev, statType) {
+		if (this.ignoreMQTT)
+			return;
 		if (message == null)
 	    	return;
 		if (message == "{\"Command\":\"Unknown\"}")
@@ -95,12 +107,77 @@ class mapDevicesClass {
 		}
 	}
 
-	getDevconfNetwork(dev, devconf) {
+	// set mqtt server address
+	// will call php, could not set from here because cors
+	async configMQTT(ip) {
+		if (!await showConfirm("Setup MQTT address for this device?", "Devices Map"))
+			return ;
+		let url = `/php/set_tasmota_mqtt.php?ip=${ip}`;
+		const ret = await get_url_content(url);
+		showMessage("Device MQTT server configured", "Devices Map");
+	}
 
+
+	// set device gata retrieved from mqtt
+	getDevconfNetwork(dev, devconf) {
 		const ipaddress = devconf['StatusNET']["IPAddress"];
 		// const hostname = devconf['StatusNET']["Hostname"];
 		// $(`hostname_${dev}`).innerHTML = `<a href=config_tasmota.php?device=${dev}>${hostname}</a>`;
 		$(`ip_${dev}`).innerHTML = ipaddress;
+	}
+
+	// get tasmota devices from network connection
+	// get_tasmota_list.php will query all existing devices looking for tasmota
+	// answer at port 80
+	getTasmotaList() {
+		$("device-list").innerHTML = messageWithImage("Searching for active devices", "img/spinner.gif", "wait_spinner", "Waiting");
+		$("total-devices").innerHTML = "";
+		$("help_mqtt_color").style.display = 'none';
+
+		this.ignoreMQTT = true;
+		fetch(`php/get_tasmota_list.php?from=${server_from}&to=${server_to}`)
+  		.then(result => result.json())
+  		.then(data => {
+			let totDevs = 0;
+			let noConfiguredDevices = false;
+			let td;
+
+			$("device-list").innerHTML = "";
+			this.createTable('Tasmota Name', true);
+			const table = $('table_devices');
+			data.forEach(dev => {
+				++totDevs;
+				const tr = createElem("tr");
+				const d = dev.device.split("_");
+
+				if (dev.mqttHost === '') {
+					td = createElem("td");
+					const img = createElem("img", { src: "img/config_mqtt.png", title: "Configure Device MQTT", style: { width: "16px", cursor: "pointer" }});
+					img.onclick = () => {
+						this.configMQTT(dev.ip);
+					};
+					td.appendChild(img);
+					tr.appendChild(td);
+					
+					noConfiguredDevices = true;
+					tr.appendChild(createElem("td", { text: d[1], style: { cursor: "pointer", "background-color": "#cceeff", title: "Not connected to MQTT" } }));
+				}
+				else {
+					tr.appendChild(createElem("td"));
+					tr.appendChild(createElem("td", { text: d[1]  }));
+				}
+				tr.appendChild(createElem("td", { text: dev.friendlyName }));
+				tr.appendChild(createElem("td", { text: dev.ip, style: { "text-align": "right", "font-family": "monospace", "font-size": "1rem" }}));
+				table.appendChild(tr);
+	  		});
+			$("total-devices").innerHTML = 'Active devices: ' + totDevs;
+			if (noConfiguredDevices)
+				$("help_mqtt_color").style.display = 'block';
+		})
+  		.catch(error => {
+			$("device-list").innerHTML = "Could not retrieve data: <br>" + error;
+    		console.error('Fetch error:', error);
+  		});
 	}
 
 	startMqttConnection() {	 
@@ -109,13 +186,12 @@ class mapDevicesClass {
 
 	startPage() {
 		this.startMqttConnection();
-		mapDevices.map_devices();
+		mapDevices.mapDevices();
 	}
 
 	setupNavigation() {
-		$('back-image')?.addEventListener("click", () => go_url("index.php"));
+		$('net-search')?.addEventListener("click", () => this.getTasmotaList());
 	}
-
 };
 
 function startPage() {
