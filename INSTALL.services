@@ -29,6 +29,11 @@ Copy the file dhouse.service from "services" folder to /etc/systemd/system.
 	[Install]
 	WantedBy=multi-user.target
 
+Modify dhouse_proxy.py for the required MQTT_HOST and MQTT_PORT.
+
+MQTT_HOST = "localhost"
+MQTT_PORT = 1883
+
 Copy the file dhouse_proxy.service from "proxy" folder to /etc/systemd/system.
 	/dhouse_proxy.service/ file
 
@@ -106,3 +111,8 @@ Add next lines to your Apache configuration virtual host:
 Restart Apache
 
 > systemctl restart Apache2
+
+
+
+
+
