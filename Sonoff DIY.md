@@ -40,3 +40,7 @@ After configuring MQTT server, you will see the new device listed on main dHouse
 
 <img width="707" height="520" alt="image" src="https://github.com/user-attachments/assets/3f26642d-8ac6-4af5-88bc-f3724a63e382" />
 
+After configuring the device, you will see the new version available notice:
+
+<img width="686" height="322" alt="image" src="https://github.com/user-attachments/assets/2b2e6f01-fe48-418e-8582-b472c5b87692" />
+
