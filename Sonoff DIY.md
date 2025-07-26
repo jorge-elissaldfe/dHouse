@@ -53,13 +53,13 @@ Look for "Install Tasmota" option under main menu.
 <img width="707" height="520" alt="image" src="https://github.com/user-attachments/assets/3f26642d-8ac6-4af5-88bc-f3724a63e382" />
 
 -
-- After configuring the device, you will see the new version available notice:
+- After configuring the device, you will see the new firmware version available notice:
 -
 
 <img width="686" height="322" alt="image" src="https://github.com/user-attachments/assets/2b2e6f01-fe48-418e-8582-b472c5b87692" />
 
 -
-- The last Tasmota available firmware will be installed.
+- The latest Tasmota available firmware will be installed.
 -
 
 <img width="648" height="424" alt="image" src="https://github.com/user-attachments/assets/451e709b-e551-40fb-acea-b12dadf1d9f3" />
