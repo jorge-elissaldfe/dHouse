@@ -154,6 +154,10 @@ Services:
 dHouse uses two services: proxy and dhouse itself.
 Copy the file dhouse.service from "services" folder to /etc/systemd/system.
 Copy the file dhouse_proxy.service from "proxy" folder to /etc/systemd/system.
+Modify dhouse_proxy.py for the required MQTT_HOST and MQTT_PORT.
+
+MQTT_HOST = "localhost"
+MQTT_PORT = 1883
 
 -Start services:
 
