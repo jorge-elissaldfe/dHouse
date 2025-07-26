@@ -84,7 +84,7 @@ class mapDevicesClass {
 			tr = createElem("tr");
 			const d = dev.device.split("_");
 			tr.appendChild(createElem("td", { text: d[1] }));
-			const lnk = createElem("a", { text: devices[dev.device]["FriendlyName"], href: `config_tasmota.php?device=${dev}` })
+			const lnk = createElem("a", { text: devices[dev.device]["FriendlyName"], href: `config_tasmota.php?device=${dev.device}` })
 			const td = createElem("td");
 			td.appendChild(lnk);
 			tr.appendChild(td);
