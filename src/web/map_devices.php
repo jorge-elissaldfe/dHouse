@@ -45,11 +45,13 @@
 
 		<!-- devices and actions -->
 		<section class="section" style="margin-bottom: 3px">
+			<div id="list-title"><b>Connected devices</b></div>
+			<br>
         	<div id="device-list" style="margin-top: 7px; overflow-x: auto">
 			</div>
 			<br><span id='total-devices'></span>
 			<div id='help_mqtt_color' style='display: none'>
-			<br><br>
+			<br>
 			<span style="display: inline-block; width: 1em; height: 1em; background-color: #cceeff; border: 1px solid #999999; vertical-align: middle"></span>
 			&nbsp;Devices not connected to MQTT
 			</div>
