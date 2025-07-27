@@ -111,7 +111,12 @@ class mapDevicesClass {
 				tr.appendChild(createElem("td"));
 				tr.appendChild(createElem("td", { text: tasmotaID }));
 			}
-			const lnk = createElem("a", { text: devices[dev.device]["FriendlyName"], href: `config_tasmota.php?device=${dev.device}` })
+
+			let lnk;
+			if (devices?.[dev.device]?.["FriendlyName"])
+				lnk = createElem("a", { text: devices[dev.device]["FriendlyName"], href: `config_tasmota.php?device=${dev.device}` })
+			else
+				lnk = createElem("a", { text: dev.device, href: `#` })
 			const td = createElem("td");
 			td.appendChild(lnk);
 			tr.appendChild(td);
@@ -232,17 +237,9 @@ class mapDevicesClass {
 		fetch(`php/get_tasmota_list.php?from=${server_from}&to=${server_to}`)
   		.then(result => result.json())
   		.then(data => {
-			let totDevs = 0;
-			let noConfiguredDevices = false;
-			let td;
-
-			$("device-list").innerHTML = "";
-
-			// this.createTable('Tasmota Name', true);
-			// const table = $('table_devices');
-
 			this.arrayDevs = data;
 			this.arrayContent = this.TASMOTA_SEARCH_DEVS;
+			$("device-list").innerHTML = "";
 			this.showDevices();
 		})
   		.catch(error => {
