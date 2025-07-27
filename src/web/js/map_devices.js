@@ -9,8 +9,13 @@ let mapDevices;
 class mapDevicesClass {
 
 	mqttClient = null;
+
 	ALREADY_EXISTING_DEVS = 1;
 	TASMOTA_SEARCH_DEVS = 2;
+
+	ORDER_DEVICE = 1;
+	ORDER_NAME = 2;
+	ORDER_IP = 3;
 
 	constructor() {
 		this.mqttClient = new mqttTasmota();
@@ -18,6 +23,7 @@ class mapDevicesClass {
 		this.ignoreMQTT = false;
 		this.arrayDevs = {};
 		this.arrayContent = this.ALREADY_EXISTING_DEVS;
+		this.order = this.ORDER_NONE;
 	}
 
 	setMqttCallbacks() {
@@ -38,7 +44,6 @@ class mapDevicesClass {
 	}
 
 	createTable() {
-
 		if (this.arrayContent == this.TASMOTA_SEARCH_DEVS)
 			$("list-title").innerHTML = "<b>Active devices</b>";
 		else
@@ -53,19 +58,22 @@ class mapDevicesClass {
 		tr.appendChild(createElem("th"));
 		
 		const devTH = createElem("th", { id: 'th_order_by_device', text: "Device", style: { "text-align": "left", cursor: "pointer" }});
-		img = createElem("img", { id: 'order_by_device', title: "Order by Device", src: "img/down.png", 
+		let imgSrc = this.order == this.ORDER_DEVICE ? 'img/down-blue.png':'img/down.png';
+		img = createElem("img", { id: 'order_by_device', title: "Order by Device", src: imgSrc, 
 								  style: { "margin-left": "4px", "vertical-align": "middle", cursor: "pointer" }});
 		devTH.appendChild(img);
 		tr.appendChild(devTH);
 
 		const nameTH = createElem("th", { id: 'th_order_by_name', text: "Name", style: { "text-align": "left", cursor: "pointer"}});
-		img = createElem("img", { id: 'order_by_name', title: "Order by Name", src: "img/down.png", 
+		imgSrc = this.order == this.ORDER_NAME ? 'img/down-blue.png':'img/down.png';
+		img = createElem("img", { id: 'order_by_name', title: "Order by Name", src: imgSrc, 
 							  style: { "margin-left": "4px", "vertical-align": "middle", cursor: "pointer" }});
 		nameTH.appendChild(img);
 		tr.appendChild(nameTH);
 
 		const ipTH = createElem("th", { id: 'th_order_by_ip', text: "IP Address", style: { "text-align": "left", cursor: "pointer" }})
-		img = createElem("img", { id: 'order_by_ip', title: "Order by IP Address", src: "img/down.png", 
+		imgSrc = this.order == this.ORDER_IP ? 'img/down-blue.png':'img/down.png';
+		img = createElem("img", { id: 'order_by_ip', title: "Order by IP Address", src: imgSrc, 
 							  	style: { "margin-left": "4px", "vertical-align": "middle", cursor: "pointer" }});
 		ipTH.appendChild(img);
 		tr.appendChild(ipTH);
@@ -114,17 +122,23 @@ class mapDevicesClass {
 
 			let lnk;
 			if (devices?.[dev.device]?.["FriendlyName"])
-				lnk = createElem("a", { text: devices[dev.device]["FriendlyName"], href: `config_tasmota.php?device=${dev.device}` })
+				lnk = createElem("a", { text: devices[dev.device]["FriendlyName"], href: `config_tasmota.php?device=${dev.device}`})
 			else
 				lnk = createElem("a", { text: dev.device, href: `#` })
-			const td = createElem("td");
+
+			td = createElem("td");
 			td.appendChild(lnk);
 			tr.appendChild(td);
 
-			if (dev?.ip)
-				tr.appendChild(createElem("td", { text: dev.ip, style: { "text-align": "right", "font-family": "monospace", "font-size": "1rem" }}));
-			else
+			if (dev?.ip) {
+				lnk = createElem("a", { text: dev.ip,  href: `http://${dev.ip}`, target: "tasmota" })
+				td = createElem("td", { style: { "text-align": "right", "font-family": "monospace", "font-size": "1rem" }});
+				td.appendChild(lnk);
+				tr.appendChild(td);
+			}
+			else {
 				tr.appendChild(createElem("td", { id: `ip_${dev.device}`, style: { "text-align": "right", "font-family": "monospace", "font-size": "1rem" }}));
+			}
 			table.appendChild(tr);
   		});
 		if (this.arrayContent == this.ALREADY_EXISTING_DEVS)
@@ -149,6 +163,7 @@ class mapDevicesClass {
 		});
 
 		$("device-list").innerHTML = "";
+		this.order = this.ORDER_IP;
 		this.showDevices();
 	}
 
@@ -159,6 +174,7 @@ class mapDevicesClass {
 			return a.device > b.device ? 1 : a.device < b.device ? -1 : 0;
 		});
 		$("device-list").innerHTML = "";
+		this.order = this.ORDER_DEVICE;
 		this.showDevices();
 	}
 
@@ -168,6 +184,7 @@ class mapDevicesClass {
 				   devices[a.device]["FriendlyName"] < devices[b.device]["FriendlyName"] ? -1 : 0;
 		});
 		$("device-list").innerHTML = "";
+		this.order = this.ORDER_NAME;
 		this.showDevices();
 	}
 
@@ -216,7 +233,11 @@ class mapDevicesClass {
 			return;	// other instance running
 
 		const ipaddress = devconf['StatusNET']["IPAddress"];
-		$(`ip_${dev}`).innerHTML = ipaddress;
+		const lnk = createElem("a", { text: ipaddress,  href: `http://${ipaddress}`, target: "tasmota" })
+		const td = $(`ip_${dev}`);
+		td.appendChild(lnk);
+
+//		$(`ip_${dev}`).innerHTML = ipaddress;
 		// store ip address into arrayDevs
 		const devObj = this.arrayDevs.find(obj => obj.device === dev);
 		if (devObj)
@@ -240,6 +261,7 @@ class mapDevicesClass {
 			this.arrayDevs = data;
 			this.arrayContent = this.TASMOTA_SEARCH_DEVS;
 			$("device-list").innerHTML = "";
+			this.order = this.ORDER_NONE;
 			this.showDevices();
 		})
   		.catch(error => {
