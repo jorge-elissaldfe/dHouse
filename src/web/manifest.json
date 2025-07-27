@@ -1,0 +1,20 @@
+{
+  "name": "dHouse",
+  "short_name": "dHouse",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#000000",
+  "icons": [
+    {
+      "src": "/img/plug96.png",
+      "sizes": "96x96",
+      "type": "image/png"
+    },
+    {
+      "src": "/img/plug.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    }
+  ]
+}
