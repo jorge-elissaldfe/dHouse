@@ -44,10 +44,20 @@ class mapDevicesClass {
 	}
 
 	createTable() {
-		if (this.arrayContent == this.TASMOTA_SEARCH_DEVS)
-			$("list-title").innerHTML = "<b>Active devices</b>";
-		else
-			$("list-title").innerHTML = "<b>Connected devices</b>";
+
+		const createTH = (id, name) => {
+			return createElem("th", { id: id, text: name, 
+								style: { "text-align": "left", cursor: "pointer" }});
+		};
+
+		const createImg = (id, title, expectedOrder) => {
+			let src = this.order == expectedOrder ? 'img/down-blue.png':'img/down.png';
+			return createElem("img", { id: id, title: title, src: src, 
+								  style: { "margin-left": "4px", "vertical-align": "middle", cursor: "pointer" }});
+		}
+
+		$("list-title").innerHTML = (this.arrayContent == this.TASMOTA_SEARCH_DEVS) ?
+									"<b>Active devices</b>":"<b>Connected devices</b>";
 
 		const devList = $("device-list");
 		const table = createElem("table", { id: 'table_devices' });
@@ -56,26 +66,17 @@ class mapDevicesClass {
 
 		tr = createElem("tr");
 		tr.appendChild(createElem("th"));
-		
-		const devTH = createElem("th", { id: 'th_order_by_device', text: "Device", style: { "text-align": "left", cursor: "pointer" }});
-		let imgSrc = this.order == this.ORDER_DEVICE ? 'img/down-blue.png':'img/down.png';
-		img = createElem("img", { id: 'order_by_device', title: "Order by Device", src: imgSrc, 
-								  style: { "margin-left": "4px", "vertical-align": "middle", cursor: "pointer" }});
-		devTH.appendChild(img);
+
+		const devTH = createTH ('th_order_by_device', "Device");
+		devTH.appendChild(createImg ('order_by_device', 'Order by Device', this.ORDER_DEVICE));
 		tr.appendChild(devTH);
 
-		const nameTH = createElem("th", { id: 'th_order_by_name', text: "Name", style: { "text-align": "left", cursor: "pointer"}});
-		imgSrc = this.order == this.ORDER_NAME ? 'img/down-blue.png':'img/down.png';
-		img = createElem("img", { id: 'order_by_name', title: "Order by Name", src: imgSrc, 
-							  style: { "margin-left": "4px", "vertical-align": "middle", cursor: "pointer" }});
-		nameTH.appendChild(img);
+		const nameTH = createTH('th_order_by_name', "Name");
+		nameTH.appendChild(createImg('order_by_name', "Order by Name", this.ORDER_NAME));
 		tr.appendChild(nameTH);
 
-		const ipTH = createElem("th", { id: 'th_order_by_ip', text: "IP Address", style: { "text-align": "left", cursor: "pointer" }})
-		imgSrc = this.order == this.ORDER_IP ? 'img/down-blue.png':'img/down.png';
-		img = createElem("img", { id: 'order_by_ip', title: "Order by IP Address", src: imgSrc, 
-							  	style: { "margin-left": "4px", "vertical-align": "middle", cursor: "pointer" }});
-		ipTH.appendChild(img);
+		const ipTH = createTH('th_order_by_ip', "IP Address");
+		ipTH.appendChild(createImg('order_by_ip', "Order by IP Address", this.ORDER_IP));
 		tr.appendChild(ipTH);
 		table.appendChild(tr);
 		devList.appendChild(table);
@@ -141,13 +142,12 @@ class mapDevicesClass {
 			}
 			table.appendChild(tr);
   		});
-		if (this.arrayContent == this.ALREADY_EXISTING_DEVS)
-			$("total-devices").innerHTML = 'Total devices: ' + this.arrayDevs.length;
-		else
-			$("total-devices").innerHTML = 'Active devices: ' + this.arrayDevs.length;
-	
+
+		$("total-devices").innerHTML = (this.arrayContent == this.ALREADY_EXISTING_DEVS) ?
+								'Total devices: ' + this.arrayDevs.length:
+								'Active devices: ' + this.arrayDevs.length;
 		if (noConfiguredDevices)
-				$("help_mqtt_color").style.display = 'block';
+			$("help_mqtt_color").style.display = 'block';
 	}
 
 	ipToNumber(ip) {
@@ -189,11 +189,7 @@ class mapDevicesClass {
 	}
 
 	mqttParseStatMessage(topic, message, dev, statType) {
-		if (this.ignoreMQTT)
-			return;
-		if (message == null)
-	    	return;
-		if (message == "{\"Command\":\"Unknown\"}")
+		if (this.ignoreMQTT || message == null || message == "{\"Command\":\"Unknown\"}")
 			return;
 
 		let devconf = null;
@@ -210,10 +206,6 @@ class mapDevicesClass {
     		case 'STATUS5':
 	    		this.getDevconfNetwork(dev, devconf);
     			break;
-			case 'STATUS':
-				// const id = `host_${dev}`;
-				// $(id).innerHTML = devconf['Status']['FriendlyName'][0];
-				break;
 		}
 	}
 
@@ -235,18 +227,19 @@ class mapDevicesClass {
 		const ipaddress = devconf['StatusNET']["IPAddress"];
 		const lnk = createElem("a", { text: ipaddress,  href: `http://${ipaddress}`, target: "tasmota" })
 		const td = $(`ip_${dev}`);
-		td.appendChild(lnk);
+		if (td)
+			td.appendChild(lnk);
 
-//		$(`ip_${dev}`).innerHTML = ipaddress;
 		// store ip address into arrayDevs
 		const devObj = this.arrayDevs.find(obj => obj.device === dev);
 		if (devObj)
   			devObj.ip = ipaddress;
 	}
 
-	// get tasmota devices from network connection
-	// get_tasmota_list.php will query all existing devices looking for tasmota
-	// answering at port 80
+	/*
+	 * get tasmota devices from network connection
+	 * get_tasmota_list.php will query all existing devices looking for tasmota answering at port 80
+	 */
 	getTasmotaList() {
 
 		$("device-list").innerHTML = messageWithImage("Searching for active devices", "img/spinner.gif", "wait_spinner", "Waiting");
