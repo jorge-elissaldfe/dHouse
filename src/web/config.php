@@ -3,9 +3,11 @@
 // Tasmota devices manager
 // Jorge Elissalde 2025
 
+define("DHOUSE_VERSION", "1.0.0");
+
 // required for dhouse service
-define("MQTT_SERVER", "localhost");	// place your MQTT server address
-define("MQTT_PORT", 1883);		// place your MQTT server port
+define("MQTT_SERVER", "172.20.0.170");
+define("MQTT_PORT", 1883);
 
 // sonoff port while running in diy
 define("SONOFF_DIY_PORT", 8081);
