@@ -109,7 +109,7 @@ ntfy:
 	[/etc/ntfy/server.yml]
 
 	listen-http: ":8082"
-	base-url: "http://dhouse.ddns.net:8082"
+	base-url: "[your domain or ip address]:8082"
 	auth-file: "/etc/ntfy/user.db"
 	allow-unauthenticated: []
 	web-root: disable
@@ -117,7 +117,7 @@ ntfy:
 	-Install ntfy Application in your cellphone
 	-Send a test message:
 
-	> curl -u [username]:[password] -d "Testing!" http://[your ip address]:8082/dhouse
+	> curl -u [username]:[password] -d "Testing!" http://[your domain or ip address]:8082/dhouse
 
 	-Set dhouse/ntfy .htaccess file:
 	[/usr/local/dhouse/ntfy/.htaccess]
