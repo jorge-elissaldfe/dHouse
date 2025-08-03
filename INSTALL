@@ -109,12 +109,14 @@ ntfy:
 	[/etc/ntfy/server.yml]
 
 	listen-http: ":8082"
-	base-url: "[your domain or ip address]:8082"
+	base-url: "http://[your domain or ip address]:8082"
 	auth-file: "/etc/ntfy/user.db"
 	allow-unauthenticated: []
 	web-root: disable
 
 	-Install ntfy Application in your cellphone
+	-Subscribe ntfy App in yoour cellphone to topic "dhouse" for server http://[your domain or ip address]:8082
+    
 	-Send a test message:
 
 	> curl -u [username]:[password] -d "Testing!" http://[your domain or ip address]:8082/dhouse
