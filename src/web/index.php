@@ -11,9 +11,10 @@
 	include("main_header.php");
 ?>
     <meta charset="UTF-8">
+    <link rel="manifest" href="/manifest.json">
+	<link rel="icon" href="img/plug96.png" sizes="96x96" type="image/png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>dHouse</title>
-	<link rel="icon" href="favicon.ico" type="image/png">
 	<link rel="stylesheet" href="style/default.css">
 	<link rel="stylesheet" href="style/dropdown.css">
 	<link rel="stylesheet" href="style/slider.css">

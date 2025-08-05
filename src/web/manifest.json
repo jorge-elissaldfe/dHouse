@@ -7,13 +7,13 @@
   "theme_color": "#000000",
   "icons": [
     {
-      "src": "/img/plug96.png",
-      "sizes": "96x96",
+      "src": "/img/plug192.png",
+      "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "/img/plug.png",
-      "sizes": "32x32",
+      "src": "/img/plug512.png",
+      "sizes": "512x512",
       "type": "image/png"
     }
   ]
