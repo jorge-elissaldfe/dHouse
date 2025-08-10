@@ -210,8 +210,8 @@ class configTasmotaClass {
 		const buttonDelay = $("button_delay").value == "yes" ? 0:1;
 		backlog += `setOption13 ${buttonDelay};`;
 
-		const powerLED = $("power_led").value == 'on' ? 1:0;
-		backlog += `LedPower ${powerLED};`;
+//		const powerLED = $("power_led").value == 'on' ? 1:0;
+//		backlog += `LedPower ${powerLED};`;
 		backlog += "SetOption0 0;"						// setoption0 to 0, avoid storing power state in flash memory
 		backlog += "SaveData 5;";						// enable auto save data
 		backlog += "Weblog 2;";							// set weblog to 2, not debug info
@@ -234,7 +234,7 @@ class configTasmotaClass {
 
 		if (set_template && newTemplate != this.deviceInfo['template']) {
 			backlog += "Template " + newTemplate + ";"
-			backlog += "Module 0;";						// allow a new tamplate to be used
+			backlog += "Module 0;";						// apply new template
 		}
 
 		this.mqttClient.publish('cmnd/'+device+'/Backlog',backlog);
