@@ -895,7 +895,7 @@ class configTasmotaClass {
 		images.forEach(img => {
 	    	img.addEventListener("click", () => {
 	        	if (this.selected) 
-					selected.classList.remove("selected");
+					this.selected.classList.remove("selected");
         		img.classList.add("selected");
         		this.selected = img;
 
