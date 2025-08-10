@@ -221,11 +221,6 @@ class configTasmotaClass {
 		backlog += "Latitude " + this.deviceInfo['latitude'] + ";";
 		backlog += "Longitude " + this.deviceInfo['longitude'] + ";";
 
-		if (set_template && newTemplate != this.deviceInfo['template']) {
-			backlog += "Module 0;";						// allow a new tamplate to be used
-			backlog += "Template " + newTemplate;
-		}
-
 		if (saveHostname) {
 			backlog += "Hostname " + friendlyNameValue + ";";
 		}
@@ -236,6 +231,11 @@ class configTasmotaClass {
 		// this will cause a device restart
 		if (this.deviceInfo['module_type'] != moduleNewType) 
 			backlog += "Module " + moduleNewIndex + ";";
+
+		if (set_template && newTemplate != this.deviceInfo['template']) {
+			backlog += "Template " + newTemplate + ";"
+			backlog += "Module 0;";						// allow a new tamplate to be used
+		}
 
 		this.mqttClient.publish('cmnd/'+device+'/Backlog',backlog);
 
