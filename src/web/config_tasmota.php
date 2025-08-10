@@ -81,6 +81,7 @@
 			<fieldset>
       			<legend>Advanced</legend>
 				<table cellpadding=0 class='none'>
+				<!--
 				<tr>
 					<td><label for="power_led">Power LED:</label></td>
 					<td><select id="power_led" style='width: auto'>
@@ -89,6 +90,7 @@
 						</select>
 					</td>
 				</tr>
+				-->
 				<tr>
 					<td><label for="button_delay">Button delay:</label></td>
 					<td><select id="button_delay" style='width: auto'>
