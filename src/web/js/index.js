@@ -301,17 +301,20 @@ class indexClass {
 			if (!online) {
 				deviceStatus.innerHTML = "Offline";
 				deviceStatus.color = "gray";
+				devices[dev].DeviceStatus = "Offline";	// store value for shown again if Place is changed
 			}
 			else {
 				deviceStatus.color = "black";
 				if (devices[dev].PowerControls > 1) {
 					// show up to 4 switches for this device power switch control
 					// deviceStatus.innerHTML = "multi switch";
+					devices[dev].DeviceStatus = "";
 					return ;
 				}
 				else {
 					// single power switch device
 					deviceStatus.innerHTML = (powerOn) ? "ON":"OFF";
+					devices[dev].DeviceStatus = (powerOn) ? "ON":"OFF";	// store value for shown again if Place is changed
 				}
 			}
 		}
@@ -344,6 +347,11 @@ class indexClass {
 	// callback from mqtt_tasmota for multiple control power change
 	// this call could be sent for a real switch change or for status query
 	mqttMultiPowerChange(dev, powerState, powerSwitch, sender) {
+		// store switch power state, required for show it again when place is changed
+		if (!devices[dev].PowerSwitch)
+			devices[dev].PowerSwitch = [];
+		devices[dev].PowerSwitch[powerSwitch] = powerState;
+
 		if (!this.isKnownDevice(dev))
 			return;
 
@@ -556,6 +564,11 @@ class indexClass {
 		// show all devices if selected or the devices for selected user house-place 
 		userDeviceOrder.forEach(dev => {
 	
+			// skip if we are not going to show unplugged devices and this device is Offline
+			if (config?.dHouse?.configuration?.showUnplugged === "hide" && devices[dev]?.DeviceStatus == "Offline") {
+				return;
+			}
+
 			if (selectedPlace == 'All' || selectedPlace == devices[dev]["Place"]) {
         		const table = this.createDeviceRow(dev, devices[dev], options);
 	
@@ -621,7 +634,6 @@ class indexClass {
 			return img;
 		}
 
-
 		const table = createElem("table");
 		const editLink = (devices?.[dev]?.ModuleType && devices[dev].ModuleType == BRIDGE_MODULE)
 				    		? `config_bridge.php?device=${dev}` : `control_device.php?device=${dev}`;
@@ -647,7 +659,7 @@ class indexClass {
 
 		cell.appendChild(this.createLink(dev,devices[dev]["FriendlyName"],editLink));
 		// place slide checkbox only if this device has 1 power switch
-		// for multiple power switch devices the status line for this device will show 4 power switches
+		// for multiple power switch devices the status line for this device will show up to 4 power switches
 		cell = row.insertCell();	
 		cell.style.width='45px';
 
@@ -656,8 +668,10 @@ class indexClass {
 				this.setLoadAverage(dev, cell, "", "4px");
 		}
 		else {
-			if (devices[dev].PowerControls == 1) 
+			if (devices[dev].PowerControls == 1) {
+				// multiple power switch devices will be shown on the status line
 				cell.appendChild(this.addSliderCheckbox(dev));
+			}
 		}
 
 		// options icons (timer, new firmware)
@@ -690,7 +704,7 @@ class indexClass {
 			return table;
 		}
 
-		// device status in second line, behind device name
+		// device status in second line, below device name
 		row = createElem("tr");
 		cell = row.insertCell();	// skip icon
 		cell.style.width="24px";
@@ -718,8 +732,14 @@ class indexClass {
 			// place up to 4 slides for power switches
 			this.placeDeviceMultiPowerSwitches(dev, div);
 		}
-		else
-			div.appendChild(document.createTextNode("Offline"));
+		else {
+			if (devices[dev]?.DeviceStatus)
+				div.appendChild(document.createTextNode(devices[dev].DeviceStatus));
+			else {
+				devices[dev].DeviceStatus = "Offline";
+				div.appendChild(document.createTextNode("Offline"));
+			}
+		}
 		cell.appendChild(div);
 
 		if (this.showLoadAverage()) {
@@ -734,8 +754,14 @@ class indexClass {
 	// place up to 4 multi power switches on status line for this device
 	placeDeviceMultiPowerSwitches(dev, div) {
 		const switchesToPlace = Math.min(4, devices[dev].PowerControls);
+
 		for (let i=0; i<switchesToPlace; i++) {
-			const label = this.addSliderCheckbox(dev, i+1);
+
+			let powerState = ""
+			if (devices[dev].PowerSwitch)
+				powerState = devices[dev].PowerSwitch[i+1] == "ON";
+
+			const label = this.addSliderCheckbox(dev, i+1, powerState);
 			// place powerSwitch name as title
 			let title = devices[dev][`switch_${i+1}`];
 
@@ -785,7 +811,7 @@ class indexClass {
 
 	// add slider button to turn device on/off 
 	// initially disabled, will be enabled when online status received 
-	addSliderCheckbox(dev, powerSwitch = 0) {
+	addSliderCheckbox(dev, powerSwitch = 0, powerState = "") {
 		const label = createElem("label", { classlist: 'switch'});
 		const inputID = powerSwitch == 0 ? `slide_${dev}`:`slide_${dev}_switch_${powerSwitch}`;
 		const input = createElem("input", { id: inputID });
@@ -793,7 +819,11 @@ class indexClass {
 
 		if (!devices[dev].Enabled)
 			input.disabled = true;
-		input.checked = devices[dev].PowerOn;
+
+		if (powerState == "")
+			input.checked = devices[dev].PowerOn;
+		else
+			input.checked = powerState;
 
 		input.setAttribute("name", dev);
 		input.addEventListener("click", (event) => {
@@ -887,6 +917,33 @@ class indexClass {
 			this.indexShortcuts.loadScenesShortcuts(this.userData);
 	}
 
+	setCurrentShowUnplugged() {
+		if (config.dHouse.configuration.showUnplugged === "show") {
+			$("hide-show-devices").src = "img/hide.png";
+			$("hide-show-devices").title = "Hide unplugged devices";
+		}
+		else {
+			$("hide-show-devices").src = "img/show.png";
+			$("hide-show-devices").title = "Show unplugged devices";
+		}
+	}
+
+	// hide/show unplugged devices
+	hideShowDevices() {
+		if (!config?.dHouse?.configuration)
+			return;
+
+		if (!config?.dHouse?.configuration?.showUnplugged) {
+			config.dHouse.configuration.showUnplugged = "hide";
+		}
+		else
+			config.dHouse.configuration.showUnplugged= config.dHouse.configuration.showUnplugged === "show" ? "hide":"show";
+
+		this.setCurrentShowUnplugged();
+		storeConfigurationInServer();
+		this.showDevicesList();
+	}
+
 	async getUserSettings() {
 		this.userData = {};
 		const data = await loadUserData();
@@ -899,10 +956,11 @@ class indexClass {
 		$('edit-scenes')?.addEventListener("click", () => go_url("edit_scenes.php"));
 		$('log-data')?.addEventListener("click", () => go_url("log_data.php"));
 		$('arrange-devs')?.addEventListener("click", () => this.arrangeDevices());
+		$("hide-show-devices")?.addEventListener("click", () => this.hideShowDevices());
 
 		if (clientIsMobile()) {
-			console.log ("edit places off");
-			$("edit-places").style.display = "none";	// hide it to get more space in icons bar
+			$("edit-places").style.display = "none";		// hide it to get more space in icons bar
+			$("hide-show-devices").style.display = "none";	// ""
 		}
 	}
 
@@ -912,6 +970,9 @@ class indexClass {
 		this.startMqttConnection();
 
 		await this.getUserSettings();
+
+		if (config?.dHouse?.configuration?.showUnplugged)
+			this.setCurrentShowUnplugged() 
 
 		this.showDevicesList();			// show all devices
 		this.placeShortcuts();
