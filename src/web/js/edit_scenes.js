@@ -392,7 +392,7 @@ class editScenesClass {
 		tdST.appendChild(stSelect);
 
 		if (!workingOnArray.deviceState)
-			workingOnArray.DeviceState = "ON";
+			workingOnArray.deviceState = "ON";
 
 		// change for deviceState (ON/OFF)
 		stSelect.onchange = function(event) {
@@ -808,7 +808,7 @@ class editScenesClass {
 			// run this scene
 			const runImg = createElem("img", { src: "img/run.png", title: "Run scene", class: "iconPointer"});
 			runImg.onclick = ((event) => {
-				runScene(scene, event);
+				this.runScene(scene, event);
 			});
 			td = tr.insertCell();
 			td.appendChild(runImg);
