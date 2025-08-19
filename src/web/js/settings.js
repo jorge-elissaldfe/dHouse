@@ -30,6 +30,7 @@ class settingsClass {
 	}
 
 	async saveSettings() {
+		const showUnplugged = $('show_unplugged').checked ? "show":"hide";
 		const showAverage = $('show_average');
 		const setHostname = $('set_hostname');
 		const sleepTime = $('sleep_time');
@@ -58,6 +59,7 @@ class settingsClass {
 		const { configuration } = config.dHouse;
 
 		configuration.dhouse_name = $("dhouse_name").value;	
+		configuration.showUnplugged = showUnplugged;
 		configuration.showAverage = showAverage.checked ? true:false;
 		configuration.setHostname = setHostname.checked ? true:false;
 		configuration.latitude = latitude;
@@ -148,6 +150,11 @@ function startPage() {
 
 		$("dhouse_name").value = configuration?.dhouse_name ?? '';
 		$("show_scenes_bar").checked = configuration?.scenesShortcut !== false;
+
+		let showUnplugged = configuration?.showUnplugged;
+		if (showUnplugged !== "show" && showUnplugged !== "hide")
+			showUnplugged = "show";
+		$("show_unplugged").checked = showUnplugged == "show";
 
 		const showAverage = configuration?.showAverage;
 		if (showAverage)
