@@ -43,6 +43,15 @@
 					</label>
 				</td>
 			</tr>
+			<tr><td><label for='show_unplugged'>Show unplugged:</label></td>
+				<td>
+					<label class='switch'>
+					<input type='checkbox' id='show_unplugged'>
+					<span class='slider round'></span>
+					</label>
+					<font size=2>&nbsp;(offline devices)</font>
+				</td>
+			</tr>
 			<tr><td><label for='show_average'>Show load:</label></td>
 				<td>
 					<label class='switch'>
@@ -95,7 +104,7 @@
 			</table>
 		</fieldset>
 
-		<br><p class="note">Set hostname will set device Hostanme = Name for DHCP location</p>
+		<br><p class="note">Set hostname will set device <b>Hostname</b> = device <b>Name</b> for DHCP location</p>
 		<div class="settings" style="display: flex; justify-content: center; align-items: center; height: 52px">
 		<button id='save' class='basic-button'> Save </button>&nbsp;&nbsp;
 		<button id='close' class='basic-button'> Close </button>
