@@ -371,6 +371,9 @@
     		echo '--- json exception: ', $e->getMessage();
 			return;
 		}
+		if ($data == null)
+			return;
+
 		if (!array_key_exists("Upgrade", $data))
 			return;
 
@@ -518,7 +521,7 @@
 
 		$parts = explode(" ", $msg); 
 
-		if ($parts[1] == "SRC:") {
+		if (isset($parts[1]) && $parts[1] == "SRC:") {
 			$storeLog[$device]['source'] = $parts[2];		// stores MQTT/Web/etc
 			return ;
 		}
