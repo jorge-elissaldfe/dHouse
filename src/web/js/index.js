@@ -568,11 +568,13 @@ class indexClass {
 			if (config?.dHouse?.configuration?.showUnplugged === "hide" && devices[dev]?.DeviceStatus == "Offline") {
 				return;
 			}
+			if (!devices[dev])	// might be from a deleted device that it is already in proxy cache
+				return;
 
 			if (selectedPlace == 'All' || selectedPlace == devices[dev]["Place"]) {
         		const table = this.createDeviceRow(dev, devices[dev], options);
 	
-				const addClass = !devices[dev]["Enabled"] ? "section-device-off":"section-device"
+				const addClass = !devices[dev]?.["Enabled"] ? "section-device-off":"section-device"
 				const section = createElem("section", { id: `div_container_${dev}`, classlist: addClass, style: { position: 'relative'} });
 				section.appendChild(table);
 
@@ -593,7 +595,7 @@ class indexClass {
 
 				// add bottom padding to a multiple power switch device 
 				// slide buttons are behind the device name
-				if (devices[dev].PowerControls > 1)
+				if (devices[dev]?.PowerControls > 1)
 					section.style.paddingBottom = "18px";
 
     	    	fragment.appendChild(section);
@@ -644,7 +646,7 @@ class indexClass {
     	let cell = row.insertCell();
 		cell.style.width="24px";
 
-		if (deviceData["Icon"]) {
+		if (deviceData?.["Icon"]) {
 			const img = createDeviceIcon();
     		cell.appendChild(img);
 		}
@@ -657,7 +659,8 @@ class indexClass {
 			document.location.href=editLink;
 		};
 
-		cell.appendChild(this.createLink(dev,devices[dev]["FriendlyName"],editLink));
+		const friendlyName = devices?.[dev]?.["FriendlyName"] ?? "";
+		cell.appendChild(this.createLink(dev,friendlyName,editLink));
 		// place slide checkbox only if this device has 1 power switch
 		// for multiple power switch devices the status line for this device will show up to 4 power switches
 		cell = row.insertCell();	
@@ -668,7 +671,7 @@ class indexClass {
 				this.setLoadAverage(dev, cell, "", "4px");
 		}
 		else {
-			if (devices[dev].PowerControls == 1) {
+			if (devices?.[dev]?.PowerControls == 1) {
 				// multiple power switch devices will be shown on the status line
 				cell.appendChild(this.addSliderCheckbox(dev));
 			}
@@ -728,7 +731,7 @@ class indexClass {
 			}
 		});
 
-		if (devices[dev].PowerControls > 1) {
+		if (devices?.[dev]?.PowerControls > 1) {
 			// place up to 4 slides for power switches
 			this.placeDeviceMultiPowerSwitches(dev, div);
 		}
@@ -736,7 +739,8 @@ class indexClass {
 			if (devices[dev]?.DeviceStatus)
 				div.appendChild(document.createTextNode(devices[dev].DeviceStatus));
 			else {
-				devices[dev].DeviceStatus = "Offline";
+				if (devices[dev])
+					devices[dev].DeviceStatus = "Offline";
 				div.appendChild(document.createTextNode("Offline"));
 			}
 		}
@@ -987,7 +991,6 @@ async function startPage() {
 
 	if ($("main_title") && config?.dHouse?.configuration?.dhouse_name)
 		$("main_title").textContent = config.dHouse.configuration.dhouse_name;
-
 	index.startPage();
 }
 

@@ -138,6 +138,10 @@ class configTasmotaClass {
 
 		// name and friendlyname
 		const friendlyNameValue = $('friendly_name').value;
+		if (friendlyNameValue === "") {
+  			showMessage("Device cannot be empty");
+			return;
+		}
 		const currentFName = config.dHouse.devices[device]?.FriendlyName;
 
 		if (config.dHouse.configuration.setHostname && currentFName !== friendlyNameValue) {
