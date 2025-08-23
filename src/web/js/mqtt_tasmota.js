@@ -116,12 +116,22 @@ class mqttTasmota {
 
 	// set power for device
 	setPower(dev,power,powerSwitch=-1) {
+
+		switch (power) {
+			case 'off': power = '0'; break;			
+			case 'on': power = '1'; break;
+			case 'toggle': power = '2'; break;
+		}
+
+		let cmd;
+
 		if (powerSwitch == -1) {
-			this.publish(`cmnd/${dev}/Power`,power);
+			cmd = `cmnd/${dev}/Power`;
 		}
 		else {
-			this.publish(`cmnd/${dev}/Power${powerSwitch}`,power);
+			cmd = `cmnd/${dev}/Power${powerSwitch}`;
 		}
+		this.publish(cmd, power);
 	}
 
 	// set timer for schedule data

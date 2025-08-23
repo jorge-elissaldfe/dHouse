@@ -514,7 +514,7 @@ class controlDeviceClass {
 	// click over power button  
 	// change request is sent to the device
 	// power button will be updated on device answer, image and status will not change here
-	userChangePowerButton(powerSwitch) {	
+	userChangePowerButton(powerSwitch) {
 		this.mqttClient.setPower(device,"toggle",powerSwitch); 
 		this.mqttClient.resetTimedPower(device, powerSwitch);
 	}
@@ -619,7 +619,7 @@ document.addEventListener("DOMContentLoaded", function() {
 	// main button for device power
 	const powerButton = $("single-power-button");
 	powerButton.addEventListener("click", function (event) {
-		controlDevice.userChangePowerButton(0);
+		controlDevice.userChangePowerButton();
 	});
 
 	// click over 'all switches on' 
