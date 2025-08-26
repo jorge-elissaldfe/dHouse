@@ -22,6 +22,8 @@ class controlDeviceClass {
 	scheduleManager = null;						// everything related to schedule
 	timerManager = null;						// everything related to user timer, will be created on start
 	friendlyName = '';
+	switchImage = 'switch';						// switch.png | switch-on.png (will change according to user settings)
+	modal = null;
 
 	constructor () {
 		this.mqttClient = new mqttTasmota();
@@ -286,7 +288,14 @@ class controlDeviceClass {
 
 		// show power button image
   		const powerControl = $('single-power-button');
-		powerControl.src = powerState ? "img/switch-on.png":"img/switch.png";
+
+		if (powerState)
+			powerControl.src = `img/${this.switchImage}-on.png`;
+		else
+			powerControl.src = `img/${this.switchImage}.png`;
+
+//		powerControl.src = powerState ? "img/switch-on.png":"img/switch.png";
+
 		powerControl.style.display = "block";
 		powerControl.removeAttribute("disabled");
 	
@@ -307,8 +316,13 @@ class controlDeviceClass {
 
 		// show power button image
   		const powerControl = $(powerID);
-		if (powerControl)
-			powerControl.src = powerState=='ON' ? "img/switch-on.png":"img/switch.png";
+		if (powerControl) {
+			// powerControl.src = powerState=='ON' ? "img/switch-on.png":"img/switch.png";
+			if (powerState == 'ON')
+				powerControl.src = `img/${this.switchImage}-on.png`;
+			else
+				powerControl.src = `img/${this.switchImage}.png`;
+		}
 
 		this.mqttClient.getTimedPower(dev);				// get timed power status to update timer image and status
 		if (powerState == 'ON') 
@@ -389,7 +403,7 @@ class controlDeviceClass {
 			div.appendChild(span);
 
 			// switch button
-			const powerImg = createElem('img', { id: `MULTI_POWER${i+1}`, src: 'img/switch.png' });
+			const powerImg = createElem('img', { id: `MULTI_POWER${i+1}`, src: `img/${this.switchImage}.png` }); // src: 'img/switch.png' });
 			powerImg.style.width='55px';
 			powerImg.style.cursor="pointer";
 			powerImg.onclick = () => {
@@ -497,6 +511,77 @@ class controlDeviceClass {
 		this.enableSlideTimer(status);
 	}
 
+	saveUserSettings() {
+		const userData = loadUserData()
+		.then(data => {
+			let dataArray = {};
+			if (data !== "")
+				dataArray = JSON.parse(data);
+
+			if (!dataArray[dhouse_user])
+				dataArray[dhouse_user] = {};
+			dataArray[dhouse_user]["switchImage"] = this.switchImage;
+
+			const ret = storeUserInServer(dataArray)
+			.then(ret => {
+			if (ret !== "store: done")
+				showMessage("Could not store user data.<br>Verify [config] folder permissions.","User settings");
+			});
+		});
+	}
+
+	updateSwitchImage() {
+		if (devices[device].PowerControls == 1) {
+			// single power switch
+			const powerState = this.powerButtonState[1];
+			const powerControl = $('single-power-button');
+			if (powerState)
+				powerControl.src = `img/${this.switchImage}-on.png`;
+			else
+				powerControl.src = `img/${this.switchImage}.png`;
+		}
+		else {
+			// multi power switch
+			for (let i=1; i<=devices[device].PowerControls; i++) {
+				const switchName = `MULTI_POWER${i}`;
+				const powerState = this.powerButtonState[i];
+				if (powerState === "ON")
+					$(switchName).src = `img/${this.switchImage}-on.png`;
+				else
+					$(switchName).src = `img/${this.switchImage}.png`;
+			}
+		}
+	}
+
+	// add onclick function for each image shown for switch image change
+	buildImageSelector() {
+		const images = document.querySelectorAll(".gallery img");
+		// build image selector
+		images.forEach(img => {
+	    	img.addEventListener("click", () => {
+	    		this.modal.style.display = "none";
+
+	        	if (this.selected) 
+					this.selected.classList.remove("selected");
+        		img.classList.add("selected");
+        		this.selected = img;
+				const imageName = img.getAttribute("data-img-name");
+				const newName = imageName.split(".")[0];
+
+				if (newName !== this.switchImage) {
+					this.switchImage = newName;
+					this.saveUserSettings();
+					this.updateSwitchImage();
+				}				
+    		});
+		});
+	}
+
+
+	selectImage() {
+    	this.modal.style.display = "block";
+	}
+
 	// enable/disable slide timer depending on power button 
 	enableSlideTimer(status) {
 	/*
@@ -533,12 +618,28 @@ class controlDeviceClass {
 		this.mqttClient.mqttConnect();
 	}
 
+	async getUserSettings() {
+		const data = await loadUserData();
+		if (data != "") {
+			const userData = JSON.parse(data);
+			if (userData?.[dhouse_user]?.switchImage) {
+				this.switchImage = userData[dhouse_user].switchImage;
+			}
+		}
+	}
+
 	/** if we have information about the power controls for this device
   	  * then place the power controls now
   	  * if the information is not set, it will be shown when receiving mqtt information
   	  * and it will be saved to dhouse.config
 	**/
-	startPage() {
+	async startPage() {
+
+		await this.getUserSettings();
+
+		// modal box for Switch image change
+		this.modal = $("imageModal");
+
 		if (devices?.[device]?.ModuleType === BRIDGE_MODULE) {
 			go_url(`config_bridge.php?device=${device}`);
 			return;
@@ -552,8 +653,9 @@ class controlDeviceClass {
 		// just to get a screen faster updated before connecting mqtt
 		if (config?.dHouse?.devices?.[device]?.PowerControls) {
 			const powerSwitches = config.dHouse.devices[device].PowerControls ?? 1;
-			if (powerSwitches == 1)
+			if (powerSwitches == 1) {
 				$("single-power-button").style.display = "block";
+			}
 			else
 				this.showPowerSwitches(device, powerSwitches);
 		}
@@ -567,9 +669,9 @@ class controlDeviceClass {
 		this.timerManager.placeUserDefinedTimers();
 		this.setMqttCallbacks();
 		this.startMqttConnection();
+		this.buildImageSelector();
 	}
 }
-
 
 // called from init_page after configuration is retrieved
 function startPage() {
@@ -580,6 +682,7 @@ function setupNavigation() {
 	$('settings-image')?.addEventListener("click", () => go_url(`config_tasmota.php?device=${device}`));
 	$('log-image')?.addEventListener("click", () => go_url(`log_data.php?device=${device}`));
 	$('notify-image')?.addEventListener("click", () => go_url(`edit_notify.php?device=${device}`));
+	$('change-switch-image')?.addEventListener("click", () => controlDevice.selectImage());
 }
 
 document.addEventListener("DOMContentLoaded", function() {
@@ -650,3 +753,8 @@ document.addEventListener("DOMContentLoaded", function() {
 	});
 });
 
+// close modal image on outside user click
+window.onclick = function(event) {
+  	if (event.target.id == "imageModal")
+       	controlDevice.modal.style.display = "none";
+};
