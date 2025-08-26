@@ -23,6 +23,7 @@
 	<link rel='stylesheet' href='style/powerButton.css'>
 	<link rel='stylesheet' href='style/schedule.css'>
 	<link rel='stylesheet' href='style/messages.css'>
+	<link rel='stylesheet' href='style/imageSelector.css'>
 	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet"> 
 </head>
 <body>
@@ -32,9 +33,10 @@
 		<!-- device configuration & info icons -->
 		<div style='height: 26px'></div>
 		<img id="back-image" src="img/back.png" class='menuIconL0 gray-over' title='Go back'>
-		<img id="settings-image" src="img/settings.png" class='menuIconR2 gray-over' title='Configuration'>		
-		<img id="notify-image" src="img/notify.png" class='menuIconR1 gray-over' title='Notifications'> 
-		<img id="log-image" src="img/log.png" class='menuIconR0 gray-over' title='Log'>
+		<img id="settings-image" src="img/settings.png" class='menuIconR3 gray-over' title='Configuration'>		
+		<img id="notify-image" src="img/notify.png" class='menuIconR2 gray-over' title='Notifications'> 
+		<img id="log-image" src="img/log.png" class='menuIconR1 gray-over' title='Log'>
+		<img id="change-switch-image" src="img/image-edit.png" class='menuIconR0 gray-over' title='Change Switch image'>
 	</header>
 
 	<section id='button_section' class="section" style='display:none'>
@@ -50,7 +52,7 @@
 				button will be set when receiving multi power status 
 				-->
 				<!-- <img disabled id="single-power-button" src="img/power_off.png" width="96px" style='cursor: pointer; display:none; user-select: none; -ms-user-select: none; -webkit-user-drag: none;'>  -->
-				<img id="single-power-button" alt='Power button' src="img/switch.png" style='cursor: pointer; display:none; user-select: none; -ms-user-select: none; -webkit-user-drag: none;'> 
+				<img id="single-power-button" style='cursor: pointer; display:none; user-select: none; -ms-user-select: none; -webkit-user-drag: none;'> 
 				<!-- timer & schedule icons -->
 				<img id="open-timer-image" src="img/timer.png" class="iconPointer" style="position: absolute; bottom: 5px;  left: 25px;" title='Timers' class='gray-over'>
 				<img id="open-schedule-image" src="img/schedule.png" class="iconPointer" style="position: absolute; bottom: 3px; left: 65px;" title='Schedule' class='gray-over'>
@@ -93,6 +95,25 @@
 	</section>
 	</div>
 	<?php include("schedule_popup.html"); ?>
+
+
+	<!-- modal for icons gallery -->
+	<div id="imageModal" class="modal">
+		<div class="modal-content" style="width: 50% !important">
+   			<h3>Select switch image</h3>
+    		<div class="gallery" id="gallery">
+    		<?php
+	       		$images = glob("img/switch*.png");
+   				foreach ($images as $img) {
+					if (strstr($img, "-on")!==false)
+						continue;
+ 		       		$name = basename($img);
+       				echo "<img style='height: 32px; width: auto' src='$img' alt='$name' data-img-name='$name'>";
+    			}
+    		?>
+			</div>
+		</div>
+	</div>
 
 <script src='js/generic.js'></script>
 <script src='js/select.js'></script>

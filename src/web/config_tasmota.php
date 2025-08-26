@@ -181,17 +181,16 @@
 	</section>
 	</div>
 
-
 	<!-- modal for icons gallery -->
 	<div id="imageModal" class="modal">
 		<div class="modal-content">
    			<h3>Select image</h3>
     		<div class="gallery" id="gallery">
     		<?php
-	       		$imagenes = glob("img/devices/*.png");
-   				foreach ($imagenes as $imagen) {
- 		       		$nombre = basename($imagen);
-       				echo "<img style='width: 24px' src='$imagen' alt='$nombre' data-img-name='$nombre'>";
+	       		$images = glob("img/devices/*.png");
+   				foreach ($images as $img) {
+ 		       		$name = basename($img);
+       				echo "<img style='width: 24px' src='$img' alt='$name' data-img-name='$name'>";
     			}
     		?>
 			</div>
