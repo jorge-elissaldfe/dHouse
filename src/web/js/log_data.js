@@ -217,15 +217,33 @@ class logDataClass {
 	// add existing devices to 'device-list'
 	setDeviceList() {
 		const select = $('device-list');
+
 		if (typeof devices !== 'undefined' && devices) {
-			Object.keys(devices).forEach(dev => {
-				if (devices[dev].ModuleType !== BRIDGE_MODULE) {
-					const option = createElem('option', { text: devices[dev].FriendlyName });
-    				option.value = dev;
-    				//option.textContent = devices[dev].FriendlyName;
+			// convert devices to dev:FriendlyName
+			const result = Object.entries(devices).map(([key, value]) => ({
+				key,
+				FriendlyName: value.FriendlyName
+			}));
+
+			// order by FriendlyName
+			result.sort((a, b) => a.FriendlyName.localeCompare(b.FriendlyName));
+			result.forEach(item => {
+				if (devices[item.key].ModuleType !== BRIDGE_MODULE) {
+					const option = createElem('option', { text: item.FriendlyName });
+   					option.value = item.key
 					select.appendChild(option);
 				}
 			});
+			
+/*
+			Object.keys(devices).forEach(dev => {
+				if (devices[dev].ModuleType !== BRIDGE_MODULE) {
+					const option = createElem('option', { text: devices[dev].FriendlyName });
+   					option.value = dev;
+					select.appendChild(option);
+				}
+			});
+*/
 		}
 		else {
 			select.style.backgroundColor = "#ddd";
@@ -297,5 +315,3 @@ document.addEventListener("DOMContentLoaded", () => {
 	log.setupNavigation();
 	
 });
-
-
