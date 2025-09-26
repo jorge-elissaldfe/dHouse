@@ -396,6 +396,8 @@
 		global $dbDisabled;
 
 		$data = json_decode($msg, true);
+		if ($data == null)
+			return;
 		if (!array_key_exists("Upgrade", $data))
 			return;
 
@@ -540,6 +542,11 @@
 		if (preg_match('/POWER\d*\s=\s/', $msg)) {
 			preg_match('/POWER(\d*)\s=\s/i', $msg, $matches);
     		$powerSwitch = ($matches[1] === "") ? 0 : (int)$matches[1];
+			if (!str_ends_with($msg, "ON") && !str_ends_with($msg, "OFF")) {
+echo "-- log error for power: $device, $topic, $msg // source=$source // friendly = $friendlyName\n";
+				return;
+			}
+
         	$powerStatus = str_ends_with($msg, "ON") ? 'ON':'OFF';
 
 			if (isset($storeLog[$device][$powerSwitch]['src'])) {
@@ -602,6 +609,11 @@
 
 			if (!$dbDisabled) {
 				try {
+
+
+echo "-- log power: $device, $topic, $msg // source=$source // friendly = $friendlyName\n";
+
+
 					$q = "INSERT into log values (NULL,'$date','$device','$command','$powerStatus','$source','$friendlyName')";
 					$db->exec($q);
 				}
