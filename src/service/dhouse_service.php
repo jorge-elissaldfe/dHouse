@@ -543,7 +543,7 @@
 			preg_match('/POWER(\d*)\s=\s/i', $msg, $matches);
     		$powerSwitch = ($matches[1] === "") ? 0 : (int)$matches[1];
 			if (!str_ends_with($msg, "ON") && !str_ends_with($msg, "OFF")) {
-echo "-- log error for power: $device, $topic, $msg // source=$source // friendly = $friendlyName\n";
+echo "-- log error for power: $device, $topic, $msg // friendly = $friendlyName\n";
 				return;
 			}
 
