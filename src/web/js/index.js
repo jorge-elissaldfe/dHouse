@@ -290,6 +290,9 @@ class indexClass {
 	// set status line behind device name
 	// for multiple power switches device up to 4 slide power switches will be placed here
 	setDeviceStatusLine(dev, online, powerOn) {
+		// DEBUG
+		// console.log ("setDeviceStatusLine: ", devices[dev].FriendlyName, "-", devices[dev].DeviceStatus);
+
 		if (devices[dev]?.ModuleType === BRIDGE_MODULE) {
 			this.setBridgeStatus(dev, online);
 			return ;
@@ -315,9 +318,14 @@ class indexClass {
 					// single power switch device
 					deviceStatus.innerHTML = (powerOn) ? "ON":"OFF";
 					devices[dev].DeviceStatus = (powerOn) ? "ON":"OFF";	// store value for shown again if Place is changed
+					// DEBUG
+					// console.log (devices[dev].FriendlyName, "-", devices[dev].DeviceStatus);
 				}
 			}
 		}
+
+		// DEBUG
+		// console.log ("setDeviceStatusLine: ", devices[dev].FriendlyName, "-", devices[dev].DeviceStatus, "-", dev, "-", online, "-", powerOn);
 	}
 
 	// set online status for SonOff Bridge
@@ -372,6 +380,9 @@ class indexClass {
 		if (!this.isKnownDevice(dev))
 			return;
 
+		// DEBUG
+		// console.log ("mqttPowerChange: ", devices[dev].FriendlyName);
+
 		// check if timer icon must be disabled
 		if (devices[dev]?.switch_1?.timerWaitingFor) {
 			// switch_1 is set for single power switch device 
@@ -388,7 +399,7 @@ class indexClass {
 		if (slide)
 	  		slide.checked = power_on;
 
-		devices[dev].PowerOn = power_on;			// store power status in devices array
+		devices[dev].PowerOn = power_on;				// store power status in devices array
 		this.setDeviceStatusLine(dev, true, power_on);	// set status line behind device name
 		this.mqttClient.getTimedPower(dev);				// request timed power to update timer running image
 	}
@@ -517,6 +528,8 @@ class indexClass {
 		if (devices)
     		Object.values(devices).forEach(dev => {
 		        Object.assign(dev, { Enabled: false, PowerOn: false });
+				// DEBUG
+				// console.log (dev.FriendlyName, "-", dev.DeviceStatus);
 	    	});
 	}
 
@@ -565,9 +578,13 @@ class indexClass {
 		userDeviceOrder.forEach(dev => {
 	
 			// skip if we are not going to show unplugged devices and this device is Offline
-			if (config?.dHouse?.configuration?.showUnplugged === "hide" && devices[dev]?.DeviceStatus == "Offline") {
+			if (config?.dHouse?.configuration?.showUnplugged === "hide" && (devices[dev]?.DeviceStatus == "Offline" || devices[dev]?.DeviceStatus == undefined)) {
 				return;
 			}
+
+			// DEBUG
+			// console.log (devices[dev].FriendlyName, " status: ", devices[dev].DeviceStatus);
+
 			if (!devices[dev])	// might be from a deleted device that it is already in proxy cache
 				return;
 
@@ -659,7 +676,11 @@ class indexClass {
 			document.location.href=editLink;
 		};
 
-		const friendlyName = devices?.[dev]?.["FriendlyName"] ?? "";
+		const friendlyName = devices?.[dev]?.["FriendlyName"] ?? "";		
+
+		// DEBUG
+		// console.log ("createDeviceRow: ", friendlyName, "-", devices[dev].DeviceStatus);
+		
 		cell.appendChild(this.createLink(dev,friendlyName,editLink));
 		// place slide checkbox only if this device has 1 power switch
 		// for multiple power switch devices the status line for this device will show up to 4 power switches
@@ -730,6 +751,9 @@ class indexClass {
 				marginLeft: "4px"
 			}
 		});
+
+		// DEBUG
+		// console.log (devices[dev].FriendlyName, " - ", devices[dev].DeviceStatus);
 
 		if (devices?.[dev]?.PowerControls > 1) {
 			// place up to 4 slides for power switches
@@ -941,7 +965,7 @@ class indexClass {
 			config.dHouse.configuration.showUnplugged = "hide";
 		}
 		else
-			config.dHouse.configuration.showUnplugged= config.dHouse.configuration.showUnplugged === "show" ? "hide":"show";
+			config.dHouse.configuration.showUnplugged = config.dHouse.configuration.showUnplugged === "show" ? "hide":"show";
 
 		this.setCurrentShowUnplugged();
 		storeConfigurationInServer();
@@ -968,6 +992,35 @@ class indexClass {
 		}
 	}
 
+	/** called when 'hide unplugged devices' option is selected
+	 ** will check devices list and set 'DeviceStatus = Offline' for any disabled device
+	 ** disabled devices are unplugged devices, because the request for the devices has sent 
+	 ** but no answer was received
+	 **/
+	updateUnpluggedDevices() {
+		
+		if (!devices)
+			return;
+
+		// check every device looking for 'section-device-off' class
+		let offlineFlag = false;
+		Object.keys(devices).forEach(dev => {
+			const key = `div_container_${dev}`;
+			const obj = document.getElementById(key);
+			if (obj)
+				if (obj.className == "section-device-off") {
+					devices[dev].DeviceStatus = 'Offline';
+					offlineFlag = true;
+				}
+    	});
+		if (offlineFlag) {
+			// update devices on screen and store them in configuration
+			console.log ("-- updating devices because offline device detected");
+			storeConfigurationInServer();
+			this.showDevicesList();
+		}
+	}
+
 	async startPage() {
 		this.resetAllDevicesStatus();	// set initial value for every device: disabled, power off
 		this.setSelectPlaces();			// show existing places in select
@@ -983,6 +1036,16 @@ class indexClass {
 
 		if (lastTasmotaFirmware == '')
 			getLastTasmotaFirmware(TASMOTA_LAST_VERSION, this.lastTasmotaFirmwareCallback.bind(this));
+
+		/** if 'hide unplugged devices' option is selected
+	 	** a timer is started to remove from screen disabled devices
+	 	** disabled devices are unplugged devices, because the request for the devices has sent 
+	 	** but no answer was received
+	 	** a reasonable time must be used to wait before disable those devices
+	 	**/
+	
+		if (config?.dHouse?.configuration?.showUnplugged === 'hide')
+			setTimeout(() => { this.updateUnpluggedDevices() }, 1000);
 	}
 }
 
@@ -1034,5 +1097,4 @@ document.addEventListener("DOMContentLoaded", (event) => {
 		set_php_session("selected_place="+this.value);
 		index.showDevicesList();
 	})
-	
 });
