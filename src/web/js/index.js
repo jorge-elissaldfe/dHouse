@@ -2,6 +2,12 @@
 // Tasmota devices manager
 // Jorge Elissalde 2025
 
+/* TODO:
+   don't store DeviceStatus in configuration
+   show all devices initially disabled (as it currently is) and 'Offline' then update ON/OFF when receive status
+   devices not reported after a while will be keept Offline, and could be turned off by timer if hide unplugged is selected
+*/
+
 "use strict";
 
 let index;
@@ -274,7 +280,6 @@ class indexClass {
 		// single power switch device
 		// set status line behind device name
 		this.setDeviceStatusLine(dev, online, devices[dev].PowerOn);
-
 		if ((online && !powerSlide.disabled) || (!online && powerSlide.disabled))
 			return;
 
@@ -291,7 +296,7 @@ class indexClass {
 	// for multiple power switches device up to 4 slide power switches will be placed here
 	setDeviceStatusLine(dev, online, powerOn) {
 		// DEBUG
-		// console.log ("setDeviceStatusLine: ", devices[dev].FriendlyName, "-", devices[dev].DeviceStatus);
+		//console.log ("setDeviceStatusLine: ", devices[dev].FriendlyName, "-", devices[dev].DeviceStatus);
 
 		if (devices[dev]?.ModuleType === BRIDGE_MODULE) {
 			this.setBridgeStatus(dev, online);
@@ -299,30 +304,35 @@ class indexClass {
 		}
 
 		// show status ON/OFF
-		const deviceStatus = $(`status_${dev}`);
-		if (deviceStatus) {
-			if (!online) {
+		const statusKey = `status_${dev}`;
+		const deviceStatus = $(statusKey);
+
+		if (!online) {
+			if (deviceStatus) {
 				deviceStatus.innerHTML = "Offline";
 				deviceStatus.color = "gray";
-				devices[dev].DeviceStatus = "Offline";	// store value for shown again if Place is changed
+			}
+			devices[dev].DeviceStatus = "Offline";	// store value for shown again if Place is changed
+		}
+		else {
+			if (deviceStatus)
+				deviceStatus.color = "black";
+			if (devices[dev].PowerControls > 1) {
+				// show up to 4 switches for this device power switch control
+				// deviceStatus.innerHTML = "multi switch";
+				devices[dev].DeviceStatus = "";
+				return ;
 			}
 			else {
-				deviceStatus.color = "black";
-				if (devices[dev].PowerControls > 1) {
-					// show up to 4 switches for this device power switch control
-					// deviceStatus.innerHTML = "multi switch";
-					devices[dev].DeviceStatus = "";
-					return ;
-				}
-				else {
-					// single power switch device
+				// single power switch device
+				if (deviceStatus)
 					deviceStatus.innerHTML = (powerOn) ? "ON":"OFF";
-					devices[dev].DeviceStatus = (powerOn) ? "ON":"OFF";	// store value for shown again if Place is changed
-					// DEBUG
-					// console.log (devices[dev].FriendlyName, "-", devices[dev].DeviceStatus);
-				}
+				devices[dev].DeviceStatus = (powerOn) ? "ON":"OFF";	// store value for shown again if Place is changed
+				// DEBUG
+				// console.log (devices[dev].FriendlyName, "-", devices[dev].DeviceStatus);
 			}
 		}
+
 
 		// DEBUG
 		// console.log ("setDeviceStatusLine: ", devices[dev].FriendlyName, "-", devices[dev].DeviceStatus, "-", dev, "-", online, "-", powerOn);
@@ -533,7 +543,7 @@ class indexClass {
 	    	});
 	}
 
-	// show every device
+	// show every existing device
 	showDevicesList() {
 
 		// returns array of devices ordered by user criteria
@@ -578,9 +588,15 @@ class indexClass {
 		userDeviceOrder.forEach(dev => {
 	
 			// skip if we are not going to show unplugged devices and this device is Offline
-			if (config?.dHouse?.configuration?.showUnplugged === "hide" && (devices[dev]?.DeviceStatus == "Offline" || devices[dev]?.DeviceStatus == undefined)) {
-				return;
-			}
+			/*
+			if (devices[dev]?.DeviceStatus !== undefined)
+				if (config?.dHouse?.configuration?.showUnplugged === "hide" && devices[dev]?.DeviceStatus == "Offline") {
+					console.log ("skip offline: " + devices[dev].FriendlyName);
+					console.log ("skip offline: " + devices[dev].DeviceStatus);
+					return;
+				}
+			*/
+
 
 			// DEBUG
 			// console.log (devices[dev].FriendlyName, " status: ", devices[dev].DeviceStatus);
@@ -761,7 +777,7 @@ class indexClass {
 		}
 		else {
 			if (devices[dev]?.DeviceStatus)
-				div.appendChild(document.createTextNode(devices[dev].DeviceStatus));
+				 div.appendChild(document.createTextNode(devices[dev].DeviceStatus));
 			else {
 				if (devices[dev])
 					devices[dev].DeviceStatus = "Offline";
@@ -945,7 +961,7 @@ class indexClass {
 			this.indexShortcuts.loadScenesShortcuts(this.userData);
 	}
 
-	setCurrentShowUnplugged() {
+	setMenuCurrentShowUnplugged() {
 		if (config.dHouse.configuration.showUnplugged === "show") {
 			$("hide-show-devices").src = "img/hide.png";
 			$("hide-show-devices").title = "Hide unplugged devices";
@@ -967,9 +983,10 @@ class indexClass {
 		else
 			config.dHouse.configuration.showUnplugged = config.dHouse.configuration.showUnplugged === "show" ? "hide":"show";
 
-		this.setCurrentShowUnplugged();
+		this.setMenuCurrentShowUnplugged();
 		storeConfigurationInServer();
-		this.showDevicesList();
+		// this.showDevicesList();
+		this.updateUnpluggedDevices();
 	}
 
 	async getUserSettings() {
@@ -1003,22 +1020,16 @@ class indexClass {
 			return;
 
 		// check every device looking for 'section-device-off' class
-		let offlineFlag = false;
+		// and turn display off
 		Object.keys(devices).forEach(dev => {
 			const key = `div_container_${dev}`;
 			const obj = document.getElementById(key);
 			if (obj)
 				if (obj.className == "section-device-off") {
 					devices[dev].DeviceStatus = 'Offline';
-					offlineFlag = true;
+					obj.style.display = "none";
 				}
     	});
-		if (offlineFlag) {
-			// update devices on screen and store them in configuration
-			console.log ("-- updating devices because offline device detected");
-			storeConfigurationInServer();
-			this.showDevicesList();
-		}
 	}
 
 	async startPage() {
@@ -1029,7 +1040,7 @@ class indexClass {
 		await this.getUserSettings();
 
 		if (config?.dHouse?.configuration?.showUnplugged)
-			this.setCurrentShowUnplugged() 
+			this.setMenuCurrentShowUnplugged() 
 
 		this.showDevicesList();			// show all devices
 		this.placeShortcuts();
@@ -1045,7 +1056,7 @@ class indexClass {
 	 	**/
 	
 		if (config?.dHouse?.configuration?.showUnplugged === 'hide')
-			setTimeout(() => { this.updateUnpluggedDevices() }, 1000);
+			setTimeout(() => { this.updateUnpluggedDevices() }, 1500);
 	}
 }
 

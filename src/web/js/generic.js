@@ -14,7 +14,6 @@ function setRolloverImage (id,normalImg,overImg,style=null) {
 	});
 }
 
-
 function go_url(url) {
 	window.location.href = url;
 }
@@ -81,7 +80,10 @@ async function postUrlContent(url, content) {
 
 // store full configuration in dhouse.config file
 async function storeConfigurationInServer() {
+	console.log ("--- store configuration in server");
 	url = "php/store_config.php";
+	for (const key in config.dHouse.devices) 
+		delete config.dHouse.devices[key].DeviceStatus;
 	return await postUrlContent(url, config);
 }
 
