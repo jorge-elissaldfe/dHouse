@@ -93,7 +93,7 @@ class upgradeTasmotaClass {
 					<table>\
 					<tr>\
 						<td><img width='22px' src='img/spinner.gif'></td>\
-						<td>Firmware successfully installed.<br>Restarting ... </td>\
+						<td>Firmware successfully installed.<br>\nRestarting...</td>\
 					</tr>\
 					</table>";
 					this.deviceRestarted = true;
