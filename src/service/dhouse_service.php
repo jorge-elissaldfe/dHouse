@@ -249,6 +249,13 @@
 		// Topic: stat/tasmota_0D7177/POWER // POWER1 // POWER2
 		// Msg: OFF
 
+		// DEBUG
+		// if (strstr($topic, "tasmota_3413D5") !== false) {
+		//	echo ">> $topic\n";
+		//	echo ">> $msg\n";
+		//}
+
+
 		$parts = explode('/', $topic);
 		$device = $parts[1];
 
@@ -300,11 +307,6 @@
 			if deviceAlive[device] does not exists, means that the application is starting
 		**/
 	
-		if (!isset($cellphoneNotify[$device][$msg]["enable"]) || $cellphoneNotify[$device][$msg]["enable"] == "no") {
-			// online/offline notification not set for this device
-			return;
-		}
-
 		$currentStatus = $msg;
 
 		if (!isset($deviceAlive[$device])) {
@@ -316,6 +318,13 @@
 			return;
 		}
 
+		if (!isset($cellphoneNotify[$device][$msg]["enable"]) || $cellphoneNotify[$device][$msg]["enable"] == "no") {
+			// online/offline notification not set for this device
+			$deviceAlive[$device]['status'] = $currentStatus;
+			return;
+		}
+
+
  		$now = microtime(true);
 		$lastseen = $now - $deviceAlive[$device]['time'];
 
@@ -324,6 +333,7 @@
 			$deviceAlive[$device]['time'] = $now;
 			return;
 		}
+
 		$deviceAlive[$device]['time'] = $now;
 		$deviceAlive[$device]['new_status'] = $currentStatus;
 	}
@@ -331,7 +341,7 @@
 
 	// check online/offline status change and send notifications
 	// when time > DEFERRED_STATUS_TIME to avoid bouncing status
-	function checkStatusNotifications() {
+	function checkStatusNotifications() { 
 		global $deviceAlive;
 		global $cellphoneNotify;
 		global $config;
@@ -543,7 +553,7 @@
 			preg_match('/POWER(\d*)\s=\s/i', $msg, $matches);
     		$powerSwitch = ($matches[1] === "") ? 0 : (int)$matches[1];
 			if (!str_ends_with($msg, "ON") && !str_ends_with($msg, "OFF")) {
-echo "-- log error for power: $device, $topic, $msg // friendly = $friendlyName\n";
+				// echo "DEBUG >> log error for power: $device, $topic, $msg // friendly = $friendlyName\n";
 				return;
 			}
 
@@ -609,11 +619,6 @@ echo "-- log error for power: $device, $topic, $msg // friendly = $friendlyName\
 
 			if (!$dbDisabled) {
 				try {
-
-
-echo "-- log power: $device, $topic, $msg // source=$source // friendly = $friendlyName\n";
-
-
 					$q = "INSERT into log values (NULL,'$date','$device','$command','$powerStatus','$source','$friendlyName')";
 					$db->exec($q);
 				}
@@ -643,5 +648,6 @@ echo "-- log power: $device, $topic, $msg // source=$source // friendly = $frien
 	}
 
 ?>
+
 
 
