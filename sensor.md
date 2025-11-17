@@ -8,6 +8,6 @@ dHouse will use this devices as a readonly and alert messages could be sent for 
 
 <img width="1509" height="722" alt="image" src="https://github.com/user-attachments/assets/86249004-8a1c-4be0-90cc-dfd89d624530" />
 
-Android device reciving notification:
+Android device receiving notification:
 
 ![5](https://github.com/user-attachments/assets/9d9ca223-13fd-4d3c-8e4a-907ab1cdb5e8)
