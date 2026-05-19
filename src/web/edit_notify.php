@@ -15,6 +15,12 @@
 ?>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!--
+	<meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+-->
+
     <title>Notifications</title>
 	<link rel='stylesheet' href='style/default.css'>
 	<link rel='stylesheet' href='style/slider.css'>
@@ -57,7 +63,7 @@
 				</td>
 			</tr>
 			<tr><td colspan=2 height="12px"></td></tr>
-			<tr><td><label for='power_on'>Switch Power On:</label></td>
+			<tr><td><label for='power_on'>Set On:</label></td>
 			<tr>
 				<td><input id="power_on" size="22" maxlength='50' type='text'></td>
 				<td><label class='switch'>
@@ -66,7 +72,8 @@
 					</label>
 				</td>
 			</tr>
-			<tr><td><label for='power_off'>Switch Power Off:</label></td>
+
+			<tr><td><label for='power_off'>Set Off:</label></td>
 			<tr>
 				<td><input id="power_off" size="22" maxlength='50' type='text'></td>
 				<td><label class='switch'>
@@ -75,8 +82,37 @@
 					</label>
 				</td>
 			</tr>
+	
+			<tr><td colspan=2>
+			<br>
+			<fieldset>
+			<legend>Time-based notification</legend>
+
+			<table>
+			<tr><td colspan=2 height="12px"></td></tr>
+			<tr><td><label for='time_based_switch'>Send notification:</label></td>
+				<td><label class='switch'>
+					<input type='checkbox' id='time_based_switch'>
+					<span class='slider round'></span>
+					</label>
+				</td>
+			<tr>
+				<td>From:</td>
+				<td id="from_time_based"></td>
+			</tr>
+			<tr>
+				<td>To:</td>
+				<td id="to_time_based"></td>
+			</tr>
+			</table>
+
+			</fieldset>
+			</td></tr>
+
 			</table>
 		<br>
+
+		<p class="note">Time-based notification sends a notification when enabled and the <b>Set On</b> event occurs within the configured time range.</p>
 		<div class="settings" style="display: flex; justify-content: center; align-items: center; height: 52px">
 		<button id='save-button' class='basic-button'> Save </button>&nbsp;&nbsp;
 		<button id='close-button' class='basic-button'> Close </button>
@@ -85,6 +121,8 @@
     </div>
 
 <script src='js/generic.js'></script>
+<script src='js/dom_utils.js'></script>
+<script src="js/select.js"></script>
 <script src="js/mqtt_tasmota.js"></script>
 <script src="js/edit_notify.js"></script>
 <script src='js/messages.js'></script>
