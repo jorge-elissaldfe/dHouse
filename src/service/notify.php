@@ -39,14 +39,62 @@ class NotifyClass {
 			$this->sendCellphoneNotify("Testing device\n" . $m["off"]);
 	}
 
-	// notify user cellphone if notification is active for this device switch change
+	// check if the defined time range falls into current time
+	// this is for the Notifications -> Time-based feature
+	// will notify "Set On" message if the event is happening in the time range
+	public function checkTimeBasedNotification($device) {
+		global $cellphoneNotify;
+
+		if (!isset($cellphoneNotify[$device]['TimeBased']))
+			return false;
+		if ($cellphoneNotify[$device]['TimeBased']['enable'] !== "yes")
+			return false;
+
+		$from_hour = (int)$cellphoneNotify[$device]['from_hour'];
+		$from_min  = (int)$cellphoneNotify[$device]['from_min'];
+		$to_hour = (int)$cellphoneNotify[$device]['to_hour'];
+		$to_min  = (int)$cellphoneNotify[$device]['to_min'];
+
+		$currentHour = (int) date('H');
+		$currentMin  = (int) date('i');
+
+		$fromTotal = ($from_hour * 60) + $from_min;
+		$toTotal   = ($to_hour * 60) + $to_min;
+		$currentTotal = ($currentHour * 60) + $currentMin;
+
+		if ($fromTotal <= $toTotal) {
+    		// ie: 08:00 → 18:00)
+    		$isInRange = (
+        		$currentTotal >= $fromTotal &&
+        		$currentTotal <= $toTotal
+    		);
+		} else {
+	    	// cross range, like midnight 22:00 → 06:00
+    		$isInRange = (
+        		$currentTotal >= $fromTotal ||
+        		$currentTotal <= $toTotal
+    		);
+		}
+		return $isInRange;
+	}
+
+	// notify user cellphone if notification is active for this device "switch change"
 	public function notifyCellphoneUserSwitch($device, $friendlyName, $powerStatus, $powerSwitch, $source) {
 		global $cellphoneNotify;
 		global $config;
 
+		$notifyTimeBased = false;
+
 		if (!isset($cellphoneNotify[$device][$powerStatus]["enable"]) || 
-				   $cellphoneNotify[$device][$powerStatus]["enable"] == "no")
-			return;
+				   $cellphoneNotify[$device][$powerStatus]["enable"] == "no") {
+
+			// check time based notifications only when the powerStatus = ON
+			if ($powerStatus == "ON")
+				$notifyTimeBased = $this->checkTimeBasedNotification($device);
+
+			if (!$notifyTimeBased)
+				return;
+		}
 
 		$userMessage = $cellphoneNotify[$device][$powerStatus]["message"];
 		$notify = $friendlyName;
@@ -67,6 +115,8 @@ class NotifyClass {
 
 	public function sendCellphoneNotify($notify, $tags="") {
 		// possible tags: no_entry, warning
+
+		echo "--- send notify $notify\n";
 
 		if (!isset($this->ntfyConfig["url"])) {
 			echo "* error: ntfyConfig[url] not defined\n";
